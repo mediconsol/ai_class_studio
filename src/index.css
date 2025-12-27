@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Medical Education Theme - Clean & Professional */
+    --background: 210 20% 98%;
+    --foreground: 210 40% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 12%;
+
+    /* Deep Teal - Medical Trust */
+    --primary: 174 62% 32%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Light Teal Surface */
+    --secondary: 174 30% 94%;
+    --secondary-foreground: 174 62% 25%;
+
+    --muted: 210 20% 94%;
+    --muted-foreground: 210 15% 45%;
+
+    /* Warm Accent */
+    --accent: 25 95% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 174 62% 32%;
+
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(174 62% 32%) 0%, hsl(174 50% 42%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(210 20% 98%) 0%, hsl(210 25% 95%) 100%);
+    --shadow-soft: 0 4px 20px -4px hsl(210 40% 12% / 0.08);
+    --shadow-card: 0 2px 12px -2px hsl(210 40% 12% / 0.06);
+    --shadow-elevated: 0 8px 32px -8px hsl(210 40% 12% / 0.12);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 210 40% 8%;
+    --foreground: 210 20% 96%;
+
+    --card: 210 35% 12%;
+    --card-foreground: 210 20% 96%;
+
+    --popover: 210 35% 12%;
+    --popover-foreground: 210 20% 96%;
+
+    --primary: 174 55% 45%;
+    --primary-foreground: 210 40% 8%;
+
+    --secondary: 210 30% 18%;
+    --secondary-foreground: 174 40% 80%;
+
+    --muted: 210 30% 18%;
+    --muted-foreground: 210 15% 60%;
+
+    --accent: 25 90% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 30% 22%;
+    --input: 210 30% 22%;
+    --ring: 174 55% 45%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-[var(--shadow-card)];
+  }
+
+  .tab-active {
+    @apply bg-primary text-primary-foreground shadow-[var(--shadow-soft)];
+  }
+
+  .slide-container {
+    @apply aspect-[16/9] max-h-[60vh] bg-card rounded-xl overflow-hidden shadow-[var(--shadow-elevated)] border border-border/50;
+  }
+
+  .ai-panel {
+    @apply bg-card rounded-xl border border-border shadow-[var(--shadow-card)];
+  }
+
+  .prompt-input {
+    @apply bg-secondary/50 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+  }
+
+  .result-display {
+    @apply bg-muted/30 border border-border/50 rounded-lg;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+
+  .animate-pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Vertical text for toggle button */
+  .writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  /* Markdown content styles */
+  .markdown-content {
+    @apply text-sm leading-relaxed;
+  }
+
+  .markdown-content > *:first-child {
+    @apply mt-0;
+  }
+
+  .markdown-content > *:last-child {
+    @apply mb-0;
+  }
+
+  /* Ordered list counter styling */
+  .markdown-content ol {
+    counter-reset: list-counter;
+  }
+
+  .markdown-content ol > li {
+    counter-increment: list-counter;
+    @apply flex gap-2;
+  }
+
+  .markdown-content ol > li::before {
+    content: counter(list-counter) ".";
+    @apply text-primary font-semibold flex-shrink-0;
+  }
+
+  /* Task list styling */
+  .markdown-content ul li input[type="checkbox"] {
+    @apply mr-2 accent-primary;
+  }
+
+  /* Scrollbar styling for response area */
+  .result-display::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .result-display::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .result-display::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  .result-display::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+}
