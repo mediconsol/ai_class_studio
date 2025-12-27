@@ -175,6 +175,8 @@ session-XX/
 - [x] 예제데이터 선택 상태 강조 (체크 아이콘, 강조 테두리)
 - [x] 프롬프트 템플릿 선택 상태 강조 (primary 색상)
 - [x] 공통 Footer 컴포넌트 (저작권 정보)
+- [x] 실습 단계 모달 (ExerciseGuidePanel - 왼쪽 패널에서 분리, 플로팅 버튼)
+- [x] 예제데이터 레이아웃 개선 (카테고리를 제목 위로 배치, 280px 너비 최적화)
 - [ ] 실습 진행률 표시
 - [ ] 다크모드 개선
 
@@ -210,23 +212,29 @@ session-XX/
 
 - [x] 실제 AI API 연동 (Gemini, GPT, Claude)
 - [x] 환경변수 설정 (.env)
-- [x] 모델 선택기 UI (5개 모델 지원)
+- [x] 모델 선택기 UI (9개 모델 지원)
 - [x] 마크다운 렌더링 응답 (MarkdownRenderer 컴포넌트)
 - [x] remark-gfm 플러그인 (테이블, 취소선, 체크리스트 지원)
 - [x] 공통 시스템 프롬프트 (마크다운 스타일 지침 포함)
 - [x] 응답 영역 스크롤 개선 (min-h-0, overflow-auto)
 - [x] 응답 모달 (크게 보기 - 90vw x 85vh, 복사 버튼 포함)
+- [x] AI 모델 최신 버전 업데이트 (Gemini 2.0, GPT-4 Turbo, o1 시리즈, Claude Opus 4)
+- [x] 기본 모델을 Claude 3.5 Haiku로 변경
 - [ ] API 키 설정 화면 (런타임 변경)
 - [ ] 응답 히스토리 저장
 
 #### 지원 AI 모델
 | 제공자 | 모델명 | 모델 ID | 등급 |
 |--------|--------|---------|------|
-| Google | Gemini 1.5 Flash | gemini-1.5-flash | 무료 |
+| Google | Gemini 2.0 Flash | gemini-2.0-flash-exp | 무료 (기본) |
 | OpenAI | GPT-4o mini | gpt-4o-mini | 기본 |
 | OpenAI | GPT-4o | gpt-4o | 프리미엄 |
-| Anthropic | Claude 3.5 Haiku | claude-3-5-haiku-latest | 기본 |
-| Anthropic | Claude Sonnet 4 | claude-sonnet-4-20250514 | 프리미엄 |
+| OpenAI | GPT-4 Turbo | gpt-4-turbo | 프리미엄 |
+| OpenAI | o1-mini | o1-mini | 기본 (추론) |
+| OpenAI | o1 | o1 | 프리미엄 (추론) |
+| Anthropic | Claude 3.5 Haiku ⭐ | claude-3-5-haiku-latest | 기본 (기본 모델) |
+| Anthropic | Claude 3.5 Sonnet | claude-3-5-sonnet-latest | 프리미엄 |
+| Anthropic | Claude Opus 4 | claude-opus-4-latest | 프리미엄 |
 
 #### 마크다운 렌더링 스타일
 | 요소 | 스타일 |
@@ -315,28 +323,28 @@ src/data/
 ### 컴포넌트
 ```
 src/components/
-├── MediConsolLogo.tsx      ← 신규 (브랜드 로고)
-├── DummyDataPanel.tsx      ← 신규 (예제데이터 선택)
-├── ExerciseGuide.tsx       ← 신규 (실습 단계 가이드)
-├── WorksheetPanel.tsx      ← 신규 (과제 워크시트)
-├── SessionSidebar.tsx      ← 신규 (왼쪽 접이식 사이드바)
-├── SlideModal.tsx          ← 신규 (슬라이드 모달 뷰어)
-├── PracticeGuidePanel.tsx  ← 신규 (실무 가이드 모달)
-├── MarkdownRenderer.tsx    ← 신규 (마크다운 렌더링 - remark-gfm)
-├── QuizPanel.tsx           ← 신규 (퀴즈 패널 - OX/4지선다)
-├── Footer.tsx              ← 신규 (공통 푸터)
-├── SlideViewer.tsx         ← 수정 (프레젠터 모드, 단축키, TOC 패널)
-├── AIPanel.tsx             ← 수정 (AI 연동, 모델 선택기, 3단 레이아웃)
-├── TabNavigation.tsx       ← 수정 (퀴즈 탭 추가, sessionId 지원)
-├── LectureHeader.tsx       ← 수정 (타이머 추가)
+├── MediConsolLogo.tsx        ← 신규 (브랜드 로고)
+├── DummyDataPanel.tsx        ← 신규 (예제데이터 선택, 카테고리 위치 최적화)
+├── ExerciseGuidePanel.tsx    ← 신규 (실습 단계 모달, 플로팅 버튼)
+├── WorksheetPanel.tsx        ← 신규 (과제 워크시트)
+├── SessionSidebar.tsx        ← 신규 (왼쪽 접이식 사이드바)
+├── SlideModal.tsx            ← 신규 (슬라이드 모달 뷰어)
+├── PracticeGuidePanel.tsx    ← 신규 (실무 가이드 모달)
+├── MarkdownRenderer.tsx      ← 신규 (마크다운 렌더링 - remark-gfm)
+├── QuizPanel.tsx             ← 신규 (퀴즈 패널 - OX/4지선다)
+├── Footer.tsx                ← 신규 (공통 푸터)
+├── SlideViewer.tsx           ← 수정 (프레젠터 모드, 단축키, TOC 패널)
+├── AIPanel.tsx               ← 수정 (AI 연동, 모델 선택기, 3단 레이아웃, 기본 모델 변경)
+├── TabNavigation.tsx         ← 수정 (퀴즈 탭 추가, sessionId 지원)
+├── LectureHeader.tsx         ← 수정 (타이머 추가)
 └── ...
 ```
 
 ### 서비스
 ```
 src/services/
-└── ai.ts                   ← 신규 (AI API 연동)
-    ├── AI_MODELS           - 5개 모델 정의
+└── ai.ts                   ← 신규 (AI API 연동, 최신 모델 업데이트)
+    ├── AI_MODELS           - 9개 모델 정의 (Gemini 2.0, GPT-4 Turbo, o1, Claude Opus 4)
     ├── SYSTEM_PROMPT       - 공통 시스템 프롬프트 (마크다운 지침)
     ├── callGemini()        - Google Gemini API
     ├── callOpenAI()        - OpenAI API
@@ -375,5 +383,5 @@ src/data/shared/
 
 ---
 
-*마지막 업데이트: 2025-12-27 (Phase 6: 홈페이지 탭 시스템 및 과정정보 완료)*
+*마지막 업데이트: 2025-12-28 (UX 개선: 실습단계 모달화, 예제데이터 레이아웃 개선, AI 모델 최신화)*
 *개발: MediConSol (mediconsol.co.kr)*
