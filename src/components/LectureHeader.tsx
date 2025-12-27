@@ -1,5 +1,6 @@
-import { BookOpen, Clock, Play, Pause, RotateCcw } from "lucide-react";
+import { BookOpen, Clock, Play, Pause, RotateCcw, LogOut } from "lucide-react";
 import SessionSelector from "./SessionSelector";
+import { Button } from "@/components/ui/button";
 
 interface LectureHeaderProps {
   sessionNumber: number;
@@ -24,6 +25,13 @@ const LectureHeader = ({
   onToggleTimer,
   onResetTimer,
 }: LectureHeaderProps) => {
+  const handleLogout = () => {
+    if (confirm("로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("auth_token");
+      window.location.href = "/";
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-panel border-b">
       <div className="max-w-[1400px] mx-auto px-6 py-2">
@@ -74,6 +82,17 @@ const LectureHeader = ({
                 </button>
               </div>
             </div>
+
+            {/* Logout Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 h-8 px-3"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="text-xs">로그아웃</span>
+            </Button>
           </div>
         </div>
       </div>

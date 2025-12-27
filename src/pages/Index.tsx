@@ -1,12 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { BookOpen, ChevronRight, GraduationCap, Target, Users, UserCircle, Sparkles, CheckCircle2, ShieldCheck } from "lucide-react";
+import { BookOpen, ChevronRight, GraduationCap, Target, Users, UserCircle, Sparkles, CheckCircle2, ShieldCheck, LogOut } from "lucide-react";
 import { MediConsolLogo } from "@/components/MediConsolLogo";
 import { getAllSessions, courseMeta } from "@/data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const navigate = useNavigate();
   const sessions = getAllSessions();
+
+  const handleLogout = () => {
+    if (confirm("로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("auth_token");
+      window.location.reload();
+    }
+  };
 
   // Group sessions by part (course.ts와 일치)
   const parts = [
@@ -52,13 +60,22 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Right: Inno Solution Logo */}
-            <div className="flex items-center justify-end">
+            {/* Right: Inno Solution Logo & Logout */}
+            <div className="flex items-center justify-end gap-4">
               <img
                 src="/inno-solution-logo.png"
                 alt="이노솔루션"
                 className="h-10 object-contain"
               />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                로그아웃
+              </Button>
             </div>
           </div>
         </div>
