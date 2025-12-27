@@ -5,22 +5,22 @@ import { resources } from './resources';
 import { dummyData } from './dummyData';
 import { exercises } from './exercises';
 import { quizzes } from './quizzes';
-import { adminPracticeGuide } from '../../shared/commonPracticeGuides';
+import { session14PracticeGuide } from './practiceGuide';
 
 export const session14: Session = {
   id: 14,
   type: 'practice',
-  title: '심사청구·적정성평가에 AI 활용',
-  subtitle: '평가 대응 문서 작성 실습',
+  title: '심사청구·적정성평가 대응에 AI 활용',
+  subtitle: '평가 대응 문서 구조화 실습',
   duration: 60,
-  objective: '심사 소명서를 체계적으로 작성',
-  keyMessage: '근거를 구조화하면 설득력이 높아진다',
+  objective: '심사·평가 대응 문서를 효과적으로 구조화',
+  keyMessage: '심사·평가의 핵심은 "근거 제시"다. AI는 근거를 정리하는 도구다.',
   tools: ['ChatGPT', 'Claude'],
   slides,
   prompts,
   resources,
   dummyData,
   exercises,
-  practiceGuide: adminPracticeGuide,
+  practiceGuide: session14PracticeGuide,
   quizzes,
 };
