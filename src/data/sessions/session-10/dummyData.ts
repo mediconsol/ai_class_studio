@@ -107,4 +107,68 @@ export const dummyData: DummyData[] = [
 - 감염관리실과 협의 후 결정
 - 배양검사 결과 등 확인 후 해제`,
   },
+  {
+    id: 's10-dd04',
+    title: '예제데이터 세트 (JSON 형식)',
+    description: 'JSON 형식의 감염관리 지침 데이터',
+    category: 'infection',
+    format: 'json',
+    isRaw: true,
+    content: `{
+  "infection_control_guidelines": {
+    "hand_hygiene": {
+      "importance": "감염 예방의 가장 중요한 방법",
+      "timing": [
+        "환자 접촉 전",
+        "무균 시술 전",
+        "체액 노출 후",
+        "환자 접촉 후",
+        "환자 주변 환경 접촉 후"
+      ],
+      "methods": ["물과 비누", "알코올 손 소독제"],
+      "duration": "최소 20초"
+    },
+    "ppe": {
+      "types": ["마스크", "장갑", "가운", "고글/안면보호대"],
+      "donning_order": ["가운", "마스크", "고글", "장갑"],
+      "doffing_order": ["장갑", "고글", "가운", "마스크"],
+      "disposal": "지정된 장소에 폐기"
+    },
+    "environment": {
+      "patient_items": "사용 후 소독",
+      "high_touch_surfaces": "매일 소독",
+      "medical_waste": "지침에 따라 분리 배출"
+    },
+    "suspected_infection": {
+      "symptoms": ["발열", "호흡기 증상", "설사"],
+      "action": "즉시 담당자에게 보고, 격리 여부 결정"
+    }
+  }
+}`,
+  },
+  {
+    id: 's10-dd05',
+    title: '예제데이터 세트 (CSV 형식)',
+    description: 'CSV 형식의 감염관리 지침 데이터',
+    category: 'infection',
+    format: 'text',
+    isRaw: true,
+    content: `영역,항목,세부내용,비고
+손위생,시점,환자 접촉 전후,필수
+손위생,시점,체액 노출 후,필수
+손위생,방법,물과 비누,오염 시
+손위생,방법,알코올 손소독제,비오염 시
+손위생,시간,최소 20초,
+PPE,종류,마스크,상황별 선택
+PPE,종류,장갑,상황별 선택
+PPE,종류,가운,상황별 선택
+PPE,종류,고글,상황별 선택
+PPE,착용순서,가운→마스크→고글→장갑,
+PPE,탈의순서,장갑→고글→가운→마스크,
+환경관리,환자물품,사용 후 소독,
+환경관리,고빈도표면,매일 소독,
+환경관리,의료폐기물,분리 배출,
+감염의심,증상,발열/호흡기증상/설사,
+감염의심,조치,즉시 보고 및 격리 결정,`,
+  },
 ];
