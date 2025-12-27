@@ -5,7 +5,7 @@ import { resources } from './resources';
 import { dummyData } from './dummyData';
 import { exercises } from './exercises';
 import { quizzes } from './quizzes';
-import { nursingPracticeGuide } from '../../shared/commonPracticeGuides';
+import { session11PracticeGuide } from './practiceGuide';
 
 export const session11: Session = {
   id: 11,
@@ -14,13 +14,13 @@ export const session11: Session = {
   subtitle: 'SOP를 교육용 체크리스트로 변환하는 실습',
   duration: 60,
   objective: 'SOP를 실무에서 바로 사용할 수 있는 체크리스트로 변환',
-  keyMessage: '복잡한 절차를 단순하게',
+  keyMessage: 'SOP는 정리의 문제다. AI는 정리 전문가다.',
   tools: ['ChatGPT', 'Claude'],
   slides,
   prompts,
   resources,
   dummyData,
   exercises,
-  practiceGuide: nursingPracticeGuide,
+  practiceGuide: session11PracticeGuide,
   quizzes,
 };
