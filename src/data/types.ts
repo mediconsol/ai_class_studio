@@ -39,7 +39,7 @@ export interface Slide {
 // 프롬프트 템플릿 (Prompt Templates)
 // ============================================
 
-export type PromptCategory = 'nursing' | 'admin' | 'general' | 'demo' | 'safety' | 'infection' | 'sop';
+export type PromptCategory = 'nursing' | 'admin' | 'general' | 'demo' | 'safety' | 'infection' | 'sop' | 'education';
 
 export interface PromptTemplate {
   id: string;
@@ -56,7 +56,7 @@ export interface PromptTemplate {
 // 예제데이터 (Dummy Data) - 실습용
 // ============================================
 
-export type DummyDataCategory = 'nursing' | 'admin' | 'patient' | 'document' | 'safety' | 'infection' | 'sop';
+export type DummyDataCategory = 'nursing' | 'admin' | 'patient' | 'document' | 'safety' | 'infection' | 'sop' | 'education';
 
 export interface DummyData {
   id: string;
