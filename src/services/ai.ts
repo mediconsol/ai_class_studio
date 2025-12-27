@@ -16,10 +16,10 @@ export const AI_MODELS: AIModel[] = [
   // Google Gemini (무료)
   {
     id: 'gemini-flash',
-    name: 'Gemini 1.5 Flash',
+    name: 'Gemini 2.0 Flash',
     provider: 'google',
-    modelId: 'gemini-1.5-flash',
-    description: '무료, 빠른 응답',
+    modelId: 'gemini-2.0-flash-exp',
+    description: '무료, 빠른 응답, 최신 모델',
     tier: 'free',
   },
   // OpenAI GPT
@@ -36,7 +36,31 @@ export const AI_MODELS: AIModel[] = [
     name: 'GPT-4o',
     provider: 'openai',
     modelId: 'gpt-4o',
-    description: '고성능, 최신 모델',
+    description: '고성능 멀티모달',
+    tier: 'premium',
+  },
+  {
+    id: 'gpt-4-turbo',
+    name: 'GPT-4 Turbo',
+    provider: 'openai',
+    modelId: 'gpt-4-turbo',
+    description: '빠른 GPT-4',
+    tier: 'premium',
+  },
+  {
+    id: 'o1-mini',
+    name: 'o1-mini',
+    provider: 'openai',
+    modelId: 'o1-mini',
+    description: '추론 특화, 경제적',
+    tier: 'standard',
+  },
+  {
+    id: 'o1',
+    name: 'o1',
+    provider: 'openai',
+    modelId: 'o1',
+    description: '고급 추론 모델',
     tier: 'premium',
   },
   // Anthropic Claude
@@ -50,10 +74,18 @@ export const AI_MODELS: AIModel[] = [
   },
   {
     id: 'claude-sonnet',
-    name: 'Claude Sonnet 4',
+    name: 'Claude 3.5 Sonnet',
     provider: 'anthropic',
-    modelId: 'claude-sonnet-4-20250514',
+    modelId: 'claude-3-5-sonnet-latest',
     description: '균형잡힌 성능',
+    tier: 'premium',
+  },
+  {
+    id: 'claude-opus',
+    name: 'Claude Opus 4',
+    provider: 'anthropic',
+    modelId: 'claude-opus-4-latest',
+    description: '최고 성능, 복잡한 작업',
     tier: 'premium',
   },
 ];
