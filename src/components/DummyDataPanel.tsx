@@ -76,21 +76,22 @@ const DummyDataPanel = ({ dummyData, onSelect, selectedId }: DummyDataPanelProps
           <div className="p-3">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <h5 className="font-medium text-foreground text-sm truncate">
-                    {data.title}
-                  </h5>
-                  {data.category && (
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-secondary text-secondary-foreground">
-                      {categoryLabels[data.category] || data.category}
-                    </span>
-                  )}
-                </div>
+                {/* Category badge above title */}
+                {data.category && (
+                  <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-medium bg-secondary text-secondary-foreground mb-1.5">
+                    {categoryLabels[data.category] || data.category}
+                  </span>
+                )}
+                {/* Title */}
+                <h5 className="font-medium text-foreground text-sm mb-1">
+                  {data.title}
+                </h5>
+                {/* Description */}
                 <p className="text-xs text-muted-foreground line-clamp-2">
                   {data.description}
                 </p>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 flex-shrink-0">
                 <button
                   onClick={(e) => handleCopy(data, e)}
                   className="p-1.5 rounded hover:bg-muted transition-colors"
