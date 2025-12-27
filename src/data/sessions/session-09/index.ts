@@ -5,7 +5,7 @@ import { resources } from './resources';
 import { dummyData } from './dummyData';
 import { exercises } from './exercises';
 import { quizzes } from './quizzes';
-import { nursingPracticeGuide } from '../../shared/commonPracticeGuides';
+import { session09PracticeGuide } from './practiceGuide';
 
 export const session09: Session = {
   id: 9,
@@ -21,6 +21,6 @@ export const session09: Session = {
   resources,
   dummyData,
   exercises,
-  practiceGuide: nursingPracticeGuide,
+  practiceGuide: session09PracticeGuide,
   quizzes,
 };
