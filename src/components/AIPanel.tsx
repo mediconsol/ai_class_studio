@@ -4,7 +4,7 @@ import { MediConsolLogo } from "./MediConsolLogo";
 import { toast } from "@/hooks/use-toast";
 import { PromptTemplate, DummyData, Exercise, PracticeGuide } from "@/data/types";
 import DummyDataPanel from "./DummyDataPanel";
-import ExerciseGuide from "./ExerciseGuide";
+import ExerciseGuidePanel from "./ExerciseGuidePanel";
 import PracticeGuidePanel from "./PracticeGuidePanel";
 import MarkdownRenderer from "./MarkdownRenderer";
 import { AI_MODELS, generateAIResponse, getModelById, PROVIDER_INFO } from "@/services/ai";
@@ -117,30 +117,18 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
   if (isPracticeMode) {
     return (
       <div className="flex gap-4 h-[calc(100vh-280px)] animate-fade-in">
-        {/* Left Panel - Dummy Data & Exercises */}
-        <div className="w-[280px] flex-shrink-0 flex flex-col gap-4 overflow-auto">
-          {/* Dummy Data */}
-          {dummyData && dummyData.length > 0 && (
-            <div className="ai-panel p-4 flex-shrink-0">
+        {/* Left Panel - Dummy Data Only */}
+        {dummyData && dummyData.length > 0 && (
+          <div className="w-[280px] flex-shrink-0">
+            <div className="ai-panel p-4 h-full overflow-auto">
               <DummyDataPanel
                 dummyData={dummyData}
                 onSelect={handleDummyDataSelect}
                 selectedId={selectedDummyData?.id}
               />
             </div>
-          )}
-
-          {/* Exercises */}
-          {exercises && exercises.length > 0 && (
-            <div className="ai-panel p-4 flex-1 overflow-auto">
-              <ExerciseGuide
-                exercises={exercises}
-                currentStep={currentExerciseStep}
-                onStepChange={setCurrentExerciseStep}
-              />
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Middle Panel - Input */}
         <div className="flex-1 ai-panel flex flex-col p-5 overflow-hidden">
@@ -399,7 +387,10 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
           </div>
         )}
 
-        {/* Practice Guide Panel - Collapsible */}
+        {/* Exercise Guide Panel - Modal */}
+        {exercises && exercises.length > 0 && <ExerciseGuidePanel exercises={exercises} />}
+
+        {/* Practice Guide Panel - Modal */}
         {practiceGuide && <PracticeGuidePanel guide={practiceGuide} />}
       </div>
     );
