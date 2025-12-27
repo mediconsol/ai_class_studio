@@ -25,15 +25,40 @@ const Index = () => {
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center gap-4">
-            <MediConsolLogo size="lg" />
-            <div>
-              <h1 className="text-xl font-display font-semibold text-foreground">
-                {courseMeta.title}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                총 {courseMeta.totalSessions}차시 교육 과정
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+            {/* Left: MediConsol Logo & Title */}
+            <div className="flex items-center gap-4">
+              <MediConsolLogo size="lg" />
+              <div>
+                <h1 className="text-xl font-display font-semibold text-foreground">
+                  {courseMeta.title}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  총 {courseMeta.totalSessions}차시 교육 과정
+                </p>
+              </div>
+            </div>
+
+            {/* Center: Inno Solution Description */}
+            <div className="text-center px-4">
+              <p className="text-sm font-semibold text-foreground whitespace-nowrap">
+                이노솔루션
               </p>
+              <p className="text-xs text-muted-foreground whitespace-nowrap">
+                "2026년 의료기관 AI 직무 융합훈련"
+              </p>
+              <p className="text-xs text-muted-foreground whitespace-nowrap">
+                실습용 강의솔루션
+              </p>
+            </div>
+
+            {/* Right: Inno Solution Logo */}
+            <div className="flex items-center justify-end">
+              <img
+                src="/inno-solution-logo.png"
+                alt="이노솔루션"
+                className="h-10 object-contain"
+              />
             </div>
           </div>
         </div>
