@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Send, Copy, Check, Loader2, RotateCcw, PlusCircle, ChevronDown, Maximize2, X } from "lucide-react";
 import { MediConsolLogo } from "./MediConsolLogo";
 import { toast } from "@/hooks/use-toast";
-import { PromptTemplate, DummyData, Exercise, PracticeGuide } from "@/data/types";
+import { PromptTemplate, DummyData, Exercise, PracticeGuide, PromptGuide, LearningGuide } from "@/data/types";
 import DummyDataPanel from "./DummyDataPanel";
 import ExerciseGuidePanel from "./ExerciseGuidePanel";
 import PracticeGuidePanel from "./PracticeGuidePanel";
+import PromptGuideModal from "./PromptGuideModal";
+import LearningGuideModal from "./LearningGuideModal";
 import MarkdownRenderer from "./MarkdownRenderer";
 import { AI_MODELS, generateAIResponse, getModelById, PROVIDER_INFO } from "@/services/ai";
 
@@ -14,9 +16,11 @@ interface AIPanelProps {
   dummyData?: DummyData[];
   exercises?: Exercise[];
   practiceGuide?: PracticeGuide;
+  promptGuide?: PromptGuide;
+  learningGuide?: LearningGuide;
 }
 
-const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPanelProps) => {
+const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptGuide, learningGuide }: AIPanelProps) => {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +31,7 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<PromptTemplate | null>(null);
 
   // Check if this is a practice session (has dummy data or exercises)
   const isPracticeMode = (dummyData && dummyData.length > 0) || (exercises && exercises.length > 0);
@@ -40,7 +45,20 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
     setResponse("");
 
     try {
-      const aiResponse = await generateAIResponse(selectedModelId, prompt);
+      // 선택된 템플릿이 있으면 템플릿의 systemPrompt 사용, 없으면 기본 systemPrompt
+      const systemPrompt = selectedTemplate?.systemPrompt || promptTemplates[0]?.systemPrompt || '';
+      const userPrompt = prompt;
+
+      // 템플릿에 설정된 temperature 사용 (없으면 기본값 0.2)
+      const temperature = selectedTemplate?.temperature;
+      const topP = selectedTemplate?.topP;
+
+      const aiResponse = await generateAIResponse(
+        selectedModelId,
+        systemPrompt,
+        userPrompt,
+        { temperature, topP }
+      );
       setResponse(aiResponse);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
@@ -70,18 +88,26 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
     setResponse("");
     setSelectedDummyData(null);
     setSelectedTemplateId(null);
+    setSelectedTemplate(null);
   };
 
   const handleTemplateClick = (template: PromptTemplate) => {
     setSelectedTemplateId(template.id);
+    setSelectedTemplate(template);
+
+    // userPrompt 사용 (기존 prompt 필드 대신)
+    let userPrompt = template.userPrompt;
+
     // If there's selected dummy data, insert it into the prompt
-    if (selectedDummyData && template.prompt.includes("{데이터}")) {
-      setPrompt(template.prompt.replace("{데이터}", selectedDummyData.content));
-    } else if (selectedDummyData) {
-      setPrompt(`${template.prompt}\n\n[입력 데이터]\n${selectedDummyData.content}`);
-    } else {
-      setPrompt(template.prompt);
+    if (selectedDummyData) {
+      if (userPrompt.includes("{데이터}")) {
+        userPrompt = userPrompt.replace("{데이터}", selectedDummyData.content);
+      } else {
+        userPrompt = `${userPrompt}\n\n[입력 데이터]\n${selectedDummyData.content}`;
+      }
     }
+
+    setPrompt(userPrompt);
   };
 
   const handleDummyDataSelect = (data: DummyData) => {
@@ -145,7 +171,9 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
           {/* Prompt Templates */}
           {promptTemplates.length > 0 && (
             <div className="mb-3">
-              <p className="text-xs font-medium text-muted-foreground mb-2">프롬프트 템플릿</p>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">프롬프트 템플릿</p>
+              </div>
               <div className="flex flex-wrap gap-1.5">
                 {promptTemplates.map((template) => (
                   <button
@@ -392,6 +420,12 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
 
         {/* Practice Guide Panel - Modal */}
         {practiceGuide && <PracticeGuidePanel guide={practiceGuide} />}
+
+        {/* Prompt Guide Modal */}
+        {promptGuide && <PromptGuideModal guide={promptGuide} />}
+
+        {/* Learning Guide Modal */}
+        {learningGuide && <LearningGuideModal guide={learningGuide} />}
       </div>
     );
   }
@@ -414,7 +448,9 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
         {/* Prompt Templates */}
         {promptTemplates.length > 0 && (
           <div className="mb-4">
-            <p className="text-xs font-medium text-muted-foreground mb-2">프롬프트 템플릿</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-muted-foreground">프롬프트 템플릿</p>
+            </div>
             <div className="flex flex-wrap gap-2">
               {promptTemplates.map((template) => (
                 <button
@@ -638,6 +674,12 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide }: AIPan
           </div>
         </div>
       )}
+
+      {/* Prompt Guide Modal */}
+      {promptGuide && <PromptGuideModal guide={promptGuide} />}
+
+      {/* Learning Guide Modal */}
+      {learningGuide && <LearningGuideModal guide={learningGuide} />}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { slides } from './slides';
 import { prompts } from './prompts';
 import { resources } from './resources';
 import { quizzes } from './quizzes';
+import { learningGuide } from './learningGuide';
 
 export const session01: Session = {
   // 메타 정보
@@ -19,6 +20,7 @@ export const session01: Session = {
   prompts,
   resources,
   quizzes,
+  learningGuide,
 
   // 이론 차시이므로 실습/과제 관련 필드 없음
 };

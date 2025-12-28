@@ -1,4 +1,5 @@
 import { PromptTemplate } from '../../types';
+import { getSystemPromptByCategory } from '../../shared/systemPrompts';
 
 export const prompts: PromptTemplate[] = [
   {
@@ -6,10 +7,8 @@ export const prompts: PromptTemplate[] = [
     title: '인수인계 템플릿 생성',
     description: '간호기록 기반 인수인계 요약 템플릿 작성',
     category: 'nursing',
-    prompt: `당신은 병동 인수인계 문서를 만드는 역할입니다.
-
-아래 간호기록을 바탕으로
-환자별 인수인계 요약을 작성해주세요.
+    systemPrompt: getSystemPromptByCategory('nursing'),
+    userPrompt: `아래 간호기록을 바탕으로 환자별 인수인계 요약을 작성해주세요.
 
 ■ 형식 (환자 1명당)
 - 현재상태: 1줄
@@ -21,17 +20,22 @@ export const prompts: PromptTemplate[] = [
 - 간호 기록 문체로 간결하게
 - 환자명은 가명 사용 (김OO, 이OO)
 
+조건:
+- 원본 간호기록에 있는 내용만 사용
+- 추측이나 해석 금지
+- 수치와 시간은 정확히 유지
+
 ■ 간호기록
 (여기에 간호기록 붙여넣기)`,
+    temperature: 0.1,
   },
   {
     id: 's18-p02',
     title: '민원 응대 문구집 생성',
     description: '민원 유형별 표준 응대 문구 작성',
     category: 'admin',
-    prompt: `당신은 병원 민원 응대 문구를 만드는 역할입니다.
-
-아래 민원 유형별로 표준 응대 문구를 작성해주세요.
+    systemPrompt: getSystemPromptByCategory('admin'),
+    userPrompt: `아래 민원 유형별로 표준 응대 문구를 작성해주세요.
 
 ■ 형식
 - 유형별 2종 (간결 버전 / 상세 버전)
@@ -43,18 +47,21 @@ export const prompts: PromptTemplate[] = [
 - 책임 회피 표현 금지
 - "규정이라서 어쩔 수 없다" 금지
 
+조건:
+- 일반적인 병원 응대 기준만 사용
+- 특정 병원의 정책 만들지 말 것
+
 ■ 민원 유형
 (여기에 민원 유형 목록 붙여넣기)`,
+    temperature: 0.15,
   },
   {
     id: 's18-p03',
     title: '적정성평가 대응 문서 생성',
     description: '평가 항목별 대응 문서 구조화',
     category: 'admin',
-    prompt: `당신은 의료기관 적정성평가 대응 문서를 만드는 역할입니다.
-
-아래 평가 항목과 운영 내용을 바탕으로
-대응 문서를 작성해주세요.
+    systemPrompt: getSystemPromptByCategory('admin'),
+    userPrompt: `아래 평가 항목과 운영 내용을 바탕으로 대응 문서를 작성해주세요.
 
 ■ 형식
 1. 평가 항목
@@ -67,18 +74,25 @@ export const prompts: PromptTemplate[] = [
 - 사실 중심 서술
 - 공식 문서 톤
 
+조건:
+- 제공된 메모에 있는 내용만 사용
+- 추측이나 일반론 금지
+- 수치와 시간은 정확히 유지
+
 ■ 평가 항목
 (여기에 평가 항목 붙여넣기)
 
 ■ 운영 내용 메모
 (여기에 운영 내용 붙여넣기)`,
+    temperature: 0.1,
   },
   {
     id: 's18-p04',
     title: '결과물 검토 요청',
     description: '작성한 결과물의 완성도 검토',
     category: 'general',
-    prompt: `내가 만든 결과물을 검토해주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `내가 만든 결과물을 검토해주세요.
 
 ■ 결과물
 (결과물 붙여넣기)
@@ -91,14 +105,20 @@ export const prompts: PromptTemplate[] = [
 
 ■ 조건
 - 솔직하게 피드백
-- 구체적인 개선 방향 제시`,
+- 구체적인 개선 방향 제시
+
+조건:
+- 제공된 결과물만 검토
+- 추측하지 말 것`,
+    temperature: 0.2,
   },
   {
     id: 's18-p05',
     title: '결과물 다듬기 요청',
     description: '결과물을 현업에서 바로 쓸 수 있도록 다듬기',
     category: 'general',
-    prompt: `아래 결과물을 현업에서 바로 쓸 수 있도록 다듬어주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `아래 결과물을 현업에서 바로 쓸 수 있도록 다듬어주세요.
 
 ■ 원본 결과물
 (결과물 붙여넣기)
@@ -111,6 +131,11 @@ export const prompts: PromptTemplate[] = [
 
 ■ 조건
 - 내용은 유지하면서 형식만 개선
-- 1장 이내로`,
+- 1장 이내로
+
+조건:
+- 원본 결과물의 내용만 사용
+- 추가 내용 금지`,
+    temperature: 0.2,
   },
 ];

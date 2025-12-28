@@ -69,13 +69,16 @@ const Session = () => {
         return <SlideViewer slides={session.slides} />;
 
       case "ai":
-        // For practice sessions, pass dummyData, exercises, and practiceGuide
+        // For practice sessions, pass dummyData, exercises, practiceGuide, and promptGuide
+        // For theory sessions, pass learningGuide
         return (
           <AIPanel
             promptTemplates={session.prompts}
             dummyData={session.dummyData}
             exercises={session.exercises}
             practiceGuide={session.practiceGuide}
+            promptGuide={session.promptGuide}
+            learningGuide={session.learningGuide}
           />
         );
 

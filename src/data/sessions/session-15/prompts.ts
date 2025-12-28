@@ -1,4 +1,5 @@
 import { PromptTemplate } from '../../types';
+import { getSystemPromptByCategory } from '../../shared/systemPrompts';
 
 export const prompts: PromptTemplate[] = [
   {
@@ -7,8 +8,8 @@ export const prompts: PromptTemplate[] = [
     description: '작성한 AI 활용 시나리오를 검토받기',
     category: 'general',
     suggestedDummyDataIds: ['s15-dd01', 's15-dd02', 's15-dd03'],
-    prompt: `당신은 의료기관 AI 활용 컨설턴트입니다.
-아래 직원이 작성한 AI 활용 시나리오를 검토하고 피드백해주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `아래 직원이 작성한 AI 활용 시나리오를 검토하고 피드백해주세요.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
            시나리오 검토 요청
@@ -66,10 +67,11 @@ export const prompts: PromptTemplate[] = [
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 주의사항
-- 비판보다는 "이렇게 하면 더 좋아질 것 같습니다" 식의 건설적 피드백
+조건:
+- 비판보다는 건설적 피드백
 - 추상적 조언보다는 구체적인 수정안 제시
 - 현장 실무자가 바로 적용할 수 있는 실용적 제안`,
+    temperature: 0.2,
   },
   {
     id: 's15-p02',
@@ -77,8 +79,8 @@ export const prompts: PromptTemplate[] = [
     description: '막연한 아이디어를 구체적인 시나리오로 발전시키기',
     category: 'general',
     suggestedDummyDataIds: ['s15-dd04', 's15-dd05'],
-    prompt: `당신은 의료기관 AI 활용 전문가입니다.
-아래 직원의 막연한 아이디어를 구체적인 AI 활용 시나리오로 발전시켜주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `아래 직원의 막연한 아이디어를 구체적인 AI 활용 시나리오로 발전시켜주세요.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
            시나리오 구체화 요청
@@ -126,11 +128,12 @@ export const prompts: PromptTemplate[] = [
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 주의사항
+조건:
 - 현재 수준에서 바로 실행 가능한 시나리오 제시
 - 너무 복잡하거나 고급 기술 요구하지 않기
 - 실제 의료기관 환경과 제약 고려
 - 프롬프트는 복사해서 바로 쓸 수 있을 정도로 구체적으로`,
+    temperature: 0.25,
   },
   {
     id: 's15-p03',
@@ -138,8 +141,8 @@ export const prompts: PromptTemplate[] = [
     description: 'AI를 적용할 업무를 선정하는 데 도움받기',
     category: 'general',
     suggestedDummyDataIds: ['s15-dd06', 's15-dd07'],
-    prompt: `당신은 의료기관 업무 효율화 컨설턴트입니다.
-아래 직원이 AI를 어떤 업무에 적용하면 좋을지 함께 고민해주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `아래 직원이 AI를 어떤 업무에 적용하면 좋을지 함께 고민해주세요.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
            AI 적용 업무 선택 도움
@@ -208,10 +211,11 @@ export const prompts: PromptTemplate[] = [
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 주의사항
+조건:
 - 현실적으로 실행 가능한 업무부터 제안
-- "이거 해보면 어때요?"가 아니라 "이걸 먼저 해보세요. 왜냐하면..." 식으로
+- 구체적인 선정 이유와 시작 방법 제시
 - 너무 많은 업무를 제안하지 말고 1-2개 집중 권장`,
+    temperature: 0.25,
   },
   {
     id: 's15-p04',
@@ -219,8 +223,8 @@ export const prompts: PromptTemplate[] = [
     description: '내 시나리오와 관련된 지난 차시 내용 찾기',
     category: 'general',
     suggestedDummyDataIds: ['s15-dd08', 's15-dd09'],
-    prompt: `당신은 AI 교육 과정 가이드입니다.
-아래 직원의 AI 활용 시나리오와 관련된 지난 차시(6-14차시)를 연결해주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `아래 직원의 AI 활용 시나리오와 관련된 지난 차시(6-14차시)를 연결해주세요.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
            관련 차시 연결
@@ -237,15 +241,15 @@ export const prompts: PromptTemplate[] = [
 
 **간호 실무 (6-10차시)**
 - 6차시: 간호기록 보조에 AI 활용
-- 7차시: 환자 설명자료 제작에 AI 활용
-- 8차시: 간호 교육자료 제작에 AI 활용
-- 9차시: 간호 인수인계 정리에 AI 활용
-- 10차시: 낙상·욕창 예방 활동에 AI 활용
+- 7차시: 환자 인수인계 정리에 AI 활용
+- 8차시: 장기 관찰기록 요약에 AI 활용
+- 9차시: 사고보고서 작성에 AI 활용
+- 10차시: 감염관리 업무에 AI 활용
 
 **행정 실무 (11-14차시)**
-- 11차시: 회의록 정리에 AI 활용
-- 12차시: 업무 매뉴얼·SOP 정리에 AI 활용
-- 13차시: 직원 교육 기획·자료 제작에 AI 활용
+- 11차시: 업무 매뉴얼·SOP 정리에 AI 활용
+- 12차시: 직원 교육 기획·자료 제작에 AI 활용
+- 13차시: 민원 응대·안내문 작성에 AI 활용
 - 14차시: 심사청구·적정성평가 대응에 AI 활용
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -271,9 +275,10 @@ export const prompts: PromptTemplate[] = [
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 주의사항
+조건:
 - 억지로 연결하지 말고 실제로 도움 되는 차시만 제안
-- "그 차시에서 배운 프롬프트 구조를 이렇게 응용하세요" 같은 구체적 연결
+- 구체적인 연결 이유와 활용 방법 제시
 - 단순히 차시 나열이 아니라 "왜 다시 봐야 하는지" 명확히 설명`,
+    temperature: 0.2,
   },
 ];

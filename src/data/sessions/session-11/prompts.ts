@@ -1,4 +1,5 @@
 import { PromptTemplate } from '../../types';
+import { getSystemPromptByCategory } from '../../shared/systemPrompts';
 
 export const prompts: PromptTemplate[] = [
   {
@@ -7,9 +8,8 @@ export const prompts: PromptTemplate[] = [
     description: '비공식 업무 설명을 공식 SOP 형태로 정리',
     category: 'sop',
     suggestedDummyDataIds: ['s11-dd01', 's11-dd02', 's11-dd03'],
-    prompt: `당신은 병원 간호 업무 SOP 작성을 보조하는 역할입니다.
-아래 업무 설명 메모를 바탕으로
-'[업무명] SOP' 초안을 작성해주세요.
+    systemPrompt: getSystemPromptByCategory('sop'),
+    userPrompt: `아래 업무 설명 메모를 바탕으로 '[업무명] SOP' 초안을 작성해주세요.
 
 ■ SOP 구조
 1. 목적 (1~2줄)
@@ -27,37 +27,46 @@ export const prompts: PromptTemplate[] = [
 
 [업무 설명 메모]
 {{데이터 붙여넣기}}`,
+    temperature: 0.1,
   },
   {
     id: 's11-p02',
     title: '현장 친화형 개선 (확장)',
     description: '신규 간호사가 이해하기 쉽게 SOP 개선',
     category: 'sop',
-    prompt: `위 SOP를
-신규 간호사가 읽어도 바로 이해할 수 있도록
-문장을 더 쉽고 명확하게 다듬어주세요.
+    systemPrompt: getSystemPromptByCategory('sop'),
+    userPrompt: `위 SOP를 신규 간호사가 읽어도 바로 이해할 수 있도록 문장을 더 쉽고 명확하게 다듬어주세요.
 
 ■ 개선 방향
 - 전문 용어에 간단한 설명 추가
 - 긴 문장은 짧게 나누기
 - 실제 행동이 명확히 보이게
-- 예시 추가 (필요시)`,
+- 예시 추가 (필요시)
+
+조건:
+- 원문의 절차와 내용은 유지
+- 추가 절차나 주의사항은 만들어내지 말 것`,
+    temperature: 0.1,
   },
   {
     id: 's11-p03',
     title: '퀵 가이드 제작 (확장)',
     description: '현장용 간략 버전 체크리스트 제작',
     category: 'sop',
-    prompt: `위 SOP를 바탕으로
-현장에서 빠르게 참고할 수 있는
-'[업무명] 퀵 가이드'를 만들어주세요.
+    systemPrompt: getSystemPromptByCategory('sop'),
+    userPrompt: `위 SOP를 바탕으로 현장에서 빠르게 참고할 수 있는 '[업무명] 퀵 가이드'를 만들어주세요.
 
 ■ 조건
 - A5 크기 1장
 - 핵심 절차만 (세부 설명 제외)
 - 체크리스트 형식 (□ 사용)
 - 벽에 붙이거나 포켓에 넣을 수 있는 형태
-- 이상 기준/주의사항 요약 포함`,
+- 이상 기준/주의사항 요약 포함
+
+조건:
+- SOP에 있는 내용만 요약
+- 추가 정보나 일반 지침은 포함하지 말 것`,
+    temperature: 0.1,
   },
   {
     id: 's11-p04',
@@ -65,8 +74,8 @@ export const prompts: PromptTemplate[] = [
     description: '모호한 표현과 명확한 표현 비교표 생성',
     category: 'sop',
     suggestedDummyDataIds: ['s11-dd01', 's11-dd02', 's11-dd03'],
-    prompt: `아래 업무 설명에서
-모호한 표현과 명확한 표현을 비교하는 표를 만들어주세요.
+    systemPrompt: getSystemPromptByCategory('sop'),
+    userPrompt: `아래 업무 설명에서 모호한 표현과 명확한 표현을 비교하는 표를 만들어주세요.
 
 ■ 형식
 | 원본 (모호한 표현) | 개선 (명확한 표현) |
@@ -75,8 +84,14 @@ export const prompts: PromptTemplate[] = [
 | "보통 2시간마다" | "2시간 간격" |
 | "많이 다르면" | "수축기 180mmHg 이상 또는 90mmHg 이하" |
 
+조건:
+- 원문에 실제로 있는 모호한 표현만 추출
+- 개선안은 구체적 수치나 기준으로 제시
+- 없는 내용을 만들어내지 말 것
+
 [업무 설명 메모]
 {{데이터 붙여넣기}}`,
+    temperature: 0.1,
   },
   {
     id: 's11-p05',
@@ -84,8 +99,8 @@ export const prompts: PromptTemplate[] = [
     description: '여러 업무를 동일 형식으로 일괄 SOP 제작',
     category: 'sop',
     suggestedDummyDataIds: ['s11-dd01', 's11-dd02', 's11-dd03'],
-    prompt: `아래 세 가지 업무 설명을 바탕으로
-각각의 SOP를 동일한 형식으로 작성해주세요.
+    systemPrompt: getSystemPromptByCategory('sop'),
+    userPrompt: `아래 세 가지 업무 설명을 바탕으로 각각의 SOP를 동일한 형식으로 작성해주세요.
 
 ■ SOP 구조 (동일 적용)
 1. 목적
@@ -93,6 +108,11 @@ export const prompts: PromptTemplate[] = [
 3. 준비물
 4. 절차
 5. 주의사항
+
+조건:
+- 각 업무 설명에 있는 정보만 사용
+- 추측이나 일반론 금지
+- 세 SOP의 형식은 동일하게 유지
 
 [업무 1: 활력징후 측정]
 {{데이터 1 붙여넣기}}
@@ -102,41 +122,55 @@ export const prompts: PromptTemplate[] = [
 
 [업무 3: 경구 투약]
 {{데이터 3 붙여넣기}}`,
+    temperature: 0.1,
   },
   {
     id: 's11-p06',
     title: 'SOP 간 연계 확인 (심화)',
     description: '두 SOP 간 충돌 및 일관성 검토',
     category: 'sop',
-    prompt: `아래 두 SOP를 검토하고
-서로 충돌하거나 일관성이 없는 부분이 있는지 확인해주세요.
+    systemPrompt: getSystemPromptByCategory('sop'),
+    userPrompt: `아래 두 SOP를 검토하고 서로 충돌하거나 일관성이 없는 부분이 있는지 확인해주세요.
 
 ■ 확인 항목
 - 시점/주기가 다른 경우
 - 용어가 다르게 사용된 경우
 - 절차 순서가 상충하는 경우
 
+조건:
+- 제공된 두 SOP만 비교
+- 추측이나 일반론 금지
+- 발견된 불일치만 지적 (없으면 없다고 명시)
+
 [SOP 1: 활력징후 측정]
 {{SOP 1 내용 붙여넣기}}
 
 [SOP 2: 환자 상태 관찰]
 {{SOP 2 내용 붙여넣기}}`,
+    temperature: 0.1,
   },
   {
     id: 's11-p07',
     title: 'SOP 개정 이력 요약 (심화)',
     description: 'SOP 버전 간 변경사항 비교 및 요약',
     category: 'sop',
-    prompt: `아래는 SOP의 이전 버전과 현재 버전입니다.
+    systemPrompt: getSystemPromptByCategory('sop'),
+    userPrompt: `아래는 SOP의 이전 버전과 현재 버전입니다.
 두 버전을 비교하여 변경된 내용을 요약해주세요.
 
 ■ 요약 형식
 | 항목 | 이전 | 현재 | 변경 사유 |
+
+조건:
+- 실제 변경된 부분만 기재
+- 변경 사유는 "변경됨" 또는 "불명" (추측 금지)
+- 없는 내용을 만들어내지 말 것
 
 [이전 버전]
 {{이전 SOP 붙여넣기}}
 
 [현재 버전]
 {{현재 SOP 붙여넣기}}`,
+    temperature: 0.05,
   },
 ];

@@ -102,33 +102,30 @@ const getApiKey = (provider: AIProvider): string => {
   }
 };
 
-// 공통 시스템 프롬프트 - 마크다운 스타일 지침 포함
-const SYSTEM_PROMPT = `당신은 의료 분야 업무를 돕는 전문 AI 어시스턴트입니다.
+// ============================================
+// AI 응답 생성 옵션
+// ============================================
 
-## 응답 원칙
-- 전문적이고 정확한 정보를 제공하되, 쉽게 이해할 수 있도록 설명합니다
-- 의료 현장에서 바로 활용할 수 있는 실용적인 내용을 제공합니다
-- 항상 "AI가 생성한 초안이므로 전문가 검토 후 사용"을 안내합니다
+export interface AIGenerationOptions {
+  temperature?: number;  // 0.0 ~ 1.0, 기본값 0.2 (할루시네이션 감소)
+  topP?: number;         // 0.0 ~ 1.0, 기본값 0.9
+  maxTokens?: number;    // 최대 토큰 수, 기본값 4096
+}
 
-## 마크다운 형식 지침
-응답 시 내용의 유형과 맥락에 따라 다음 형식을 적절히 활용하세요:
-
-1. **제목 구조**: 주제별로 ## (h2), ### (h3) 헤딩을 사용하여 내용을 구조화
-2. **목록**: 순서가 있으면 번호 목록(1. 2. 3.), 없으면 글머리 기호(- 또는 *)
-3. **표**: 비교, 분류, 일정 등 데이터 정리 시 마크다운 테이블 사용
-4. **강조**: 핵심 용어는 **굵게**, 부가 설명은 *기울임*
-5. **인용**: 주의사항, 경고, 팁은 > 인용 블록 사용
-6. **코드**: 약물명, 수치, 코드는 \`인라인 코드\` 사용
-7. **구분선**: 섹션 구분 시 --- 사용
-
-## 응답 구조 예시
-- 문서 작성 요청: 제목 → 본문 → 주의사항
-- 분석/비교 요청: 요약 → 상세 분석(표 활용) → 결론
-- 교육 자료 요청: 목적 → 핵심 내용(목록) → 활용 방법
-- 절차/프로세스: 단계별 번호 목록 → 각 단계 설명`;
+// 기본 설정값 (할루시네이션 최소화)
+const DEFAULT_OPTIONS: Required<AIGenerationOptions> = {
+  temperature: 0.2,
+  topP: 0.9,
+  maxTokens: 4096,
+};
 
 // Google Gemini API 호출
-async function callGemini(modelId: string, prompt: string): Promise<string> {
+async function callGemini(
+  modelId: string,
+  systemPrompt: string,
+  userPrompt: string,
+  options: Required<AIGenerationOptions>
+): Promise<string> {
   const apiKey = getApiKey('google');
   if (!apiKey) throw new Error('Google AI API 키가 설정되지 않았습니다.');
 
@@ -142,16 +139,17 @@ async function callGemini(modelId: string, prompt: string): Promise<string> {
       },
       body: JSON.stringify({
         system_instruction: {
-          parts: [{ text: SYSTEM_PROMPT }],
+          parts: [{ text: systemPrompt }],
         },
         contents: [
           {
-            parts: [{ text: prompt }],
+            parts: [{ text: userPrompt }],
           },
         ],
         generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 4096,
+          temperature: options.temperature,
+          topP: options.topP,
+          maxOutputTokens: options.maxTokens,
         },
       }),
     }
@@ -167,7 +165,12 @@ async function callGemini(modelId: string, prompt: string): Promise<string> {
 }
 
 // OpenAI API 호출
-async function callOpenAI(modelId: string, prompt: string): Promise<string> {
+async function callOpenAI(
+  modelId: string,
+  systemPrompt: string,
+  userPrompt: string,
+  options: Required<AIGenerationOptions>
+): Promise<string> {
   const apiKey = getApiKey('openai');
   if (!apiKey) throw new Error('OpenAI API 키가 설정되지 않았습니다.');
 
@@ -182,15 +185,16 @@ async function callOpenAI(modelId: string, prompt: string): Promise<string> {
       messages: [
         {
           role: 'system',
-          content: SYSTEM_PROMPT,
+          content: systemPrompt,
         },
         {
           role: 'user',
-          content: prompt,
+          content: userPrompt,
         },
       ],
-      temperature: 0.7,
-      max_tokens: 4096,
+      temperature: options.temperature,
+      top_p: options.topP,
+      max_tokens: options.maxTokens,
     }),
   });
 
@@ -204,7 +208,12 @@ async function callOpenAI(modelId: string, prompt: string): Promise<string> {
 }
 
 // Anthropic Claude API 호출
-async function callAnthropic(modelId: string, prompt: string): Promise<string> {
+async function callAnthropic(
+  modelId: string,
+  systemPrompt: string,
+  userPrompt: string,
+  options: Required<AIGenerationOptions>
+): Promise<string> {
   const apiKey = getApiKey('anthropic');
   if (!apiKey) throw new Error('Anthropic API 키가 설정되지 않았습니다.');
 
@@ -218,12 +227,14 @@ async function callAnthropic(modelId: string, prompt: string): Promise<string> {
     },
     body: JSON.stringify({
       model: modelId,
-      max_tokens: 4096,
-      system: SYSTEM_PROMPT,
+      max_tokens: options.maxTokens,
+      temperature: options.temperature,
+      top_p: options.topP,
+      system: systemPrompt,
       messages: [
         {
           role: 'user',
-          content: prompt,
+          content: userPrompt,
         },
       ],
     }),
@@ -239,19 +250,30 @@ async function callAnthropic(modelId: string, prompt: string): Promise<string> {
 }
 
 // 통합 AI 호출 함수
-export async function generateAIResponse(modelId: string, prompt: string): Promise<string> {
+export async function generateAIResponse(
+  modelId: string,
+  systemPrompt: string,
+  userPrompt: string,
+  options?: AIGenerationOptions
+): Promise<string> {
   const model = AI_MODELS.find((m) => m.id === modelId);
   if (!model) {
     throw new Error(`알 수 없는 모델: ${modelId}`);
   }
 
+  // 옵션 병합 (사용자 제공 옵션이 기본값 override)
+  const finalOptions: Required<AIGenerationOptions> = {
+    ...DEFAULT_OPTIONS,
+    ...options,
+  };
+
   switch (model.provider) {
     case 'google':
-      return callGemini(model.modelId, prompt);
+      return callGemini(model.modelId, systemPrompt, userPrompt, finalOptions);
     case 'openai':
-      return callOpenAI(model.modelId, prompt);
+      return callOpenAI(model.modelId, systemPrompt, userPrompt, finalOptions);
     case 'anthropic':
-      return callAnthropic(model.modelId, prompt);
+      return callAnthropic(model.modelId, systemPrompt, userPrompt, finalOptions);
     default:
       throw new Error(`지원하지 않는 제공자: ${model.provider}`);
   }

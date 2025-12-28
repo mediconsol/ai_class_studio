@@ -6,6 +6,7 @@ import { dummyData } from './dummyData';
 import { exercises } from './exercises';
 import { quizzes } from './quizzes';
 import { session06PracticeGuide } from './practiceGuide';
+import { promptGuide } from './promptGuide';
 
 export const session06: Session = {
   // 메타 정보
@@ -27,5 +28,6 @@ export const session06: Session = {
   dummyData,
   exercises,
   practiceGuide: session06PracticeGuide,
+  promptGuide,
   quizzes,
 };

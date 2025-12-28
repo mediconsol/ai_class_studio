@@ -3,6 +3,7 @@ import { slides } from './slides';
 import { prompts } from './prompts';
 import { resources } from './resources';
 import { quizzes } from './quizzes';
+import { learningGuide } from './learningGuide';
 
 export const session03: Session = {
   id: 3,
@@ -17,4 +18,5 @@ export const session03: Session = {
   prompts,
   resources,
   quizzes,
+  learningGuide,
 };

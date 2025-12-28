@@ -45,11 +45,21 @@ export interface PromptTemplate {
   id: string;
   title: string;
   description: string;
-  prompt: string;
+
+  // 시스템 프롬프트: AI의 역할, 제약사항, 안전 규칙 정의
+  systemPrompt: string;
+
+  // 사용자 프롬프트: 실제 작업 요청 내용
+  userPrompt: string;
+
   category: PromptCategory;
 
   // 프롬프트에 삽입할 예제데이터 ID (선택)
   suggestedDummyDataIds?: string[];
+
+  // 할루시네이션 감소를 위한 설정 (선택)
+  temperature?: number;  // 기본값: 0.2 (낮을수록 정확성 우선)
+  topP?: number;         // 기본값: 0.9
 }
 
 // ============================================
@@ -137,6 +147,81 @@ export interface PracticeGuide {
 }
 
 // ============================================
+// 프롬프트 가이드 (Prompt Guide) - 프롬프트 설계 교육용
+// ============================================
+
+export interface PromptExample {
+  title: string;
+  systemPrompt: string;
+  userPrompt: string;
+  output: string;
+  issues?: string[];  // 문제점 (나쁜 예시일 경우)
+}
+
+export interface PromptGuide {
+  // 이 차시의 프롬프트 전략
+  strategy: {
+    title: string;
+    description: string;
+    keyPoints: string[];
+    temperature: number;
+    temperatureReason: string;
+  };
+
+  // 나쁜 예 vs 좋은 예 비교
+  comparison: {
+    bad: PromptExample;
+    good: PromptExample;
+  };
+
+  // 직접 실습
+  practice: {
+    title: string;
+    instruction: string;
+    basePrompt: string;
+    improvementHints: string[];
+  };
+
+  // 핵심 체크리스트
+  checklist: string[];
+}
+
+// ============================================
+// 학습 가이드 (Learning Guide) - 이론 차시용 (1-5차시)
+// ============================================
+
+export interface CommonMistake {
+  myth: string;      // 잘못된 생각
+  reality: string;   // 올바른 이해
+}
+
+export interface LearningGuide {
+  // 핵심 요약
+  keyTakeaways: {
+    title: string;
+    points: string[];
+  };
+
+  // 실무 연결 팁
+  practicalConnection: {
+    title: string;
+    tips: string[];
+  };
+
+  // 흔한 오해/실수
+  commonMistakes: {
+    title: string;
+    mistakes: CommonMistake[];
+  };
+
+  // 자가 점검
+  selfCheck: {
+    title: string;
+    questions: string[];
+  };
+}
+
+// ============================================
 // 퀴즈 (Quiz) - 1~5차시용
 // ============================================
 
@@ -211,11 +296,13 @@ export interface Session extends SessionMeta {
 
   // 이론 차시 전용 (1~5차시)
   quizzes?: Quiz[];
+  learningGuide?: LearningGuide;  // 학습 가이드 (1-5차시)
 
   // 실습 차시 전용
   dummyData?: DummyData[];
   exercises?: Exercise[];
   practiceGuide?: PracticeGuide;
+  promptGuide?: PromptGuide;  // 프롬프트 설계 가이드 (6-15차시)
 
   // 과제 차시 전용
   worksheets?: Worksheet[];

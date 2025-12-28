@@ -1,4 +1,5 @@
 import { PromptTemplate } from '../../types';
+import { getSystemPromptByCategory } from '../../shared/systemPrompts';
 
 export const prompts: PromptTemplate[] = [
   {
@@ -6,7 +7,8 @@ export const prompts: PromptTemplate[] = [
     title: '개선 설계서 검토',
     description: '작성한 설계서의 전/후 비교 명확성 검토',
     category: 'general',
-    prompt: `내가 작성한 AI 업무 개선 설계서를 검토해주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `내가 작성한 AI 업무 개선 설계서를 검토해주세요.
 
 ■ 설계서
 (작성한 내용 붙여넣기)
@@ -20,14 +22,20 @@ export const prompts: PromptTemplate[] = [
 
 ■ 조건
 - 솔직하게 피드백해주세요
-- 개선 방향을 구체적으로 제안해주세요`,
+- 개선 방향을 구체적으로 제안해주세요
+
+조건:
+- 제공된 설계서 내용만 검토
+- 추측하지 말 것`,
+    temperature: 0.2,
   },
   {
     id: 's17-p02',
     title: '전/후 비교표 작성 도움',
     description: '과제 정의서 기반 비교표 작성 지원',
     category: 'general',
-    prompt: `내 과제의 전/후 비교표를 작성하는 것을 도와주세요.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `내 과제의 전/후 비교표를 작성하는 것을 도와주세요.
 
 ■ 과제 정의서
 (16차시 과제 정의서 붙여넣기)
@@ -38,14 +46,20 @@ export const prompts: PromptTemplate[] = [
 ■ 요청
 - 전/후 비교표 형식으로 정리
 - 업무 흐름, 소요 시간, 결과물, 사람/AI 역할 포함
-- 핵심 변화 요약 포함`,
+- 핵심 변화 요약 포함
+
+조건:
+- 제공된 과제 정의서와 업무 흐름만 사용
+- 추측이나 일반론 금지`,
+    temperature: 0.25,
   },
   {
     id: 's17-p03',
     title: '업무 흐름 구체화',
     description: 'AI 적용 전/후 업무 흐름 상세화',
     category: 'general',
-    prompt: `내 과제의 업무 흐름을 더 구체적으로 정리하고 싶습니다.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `내 과제의 업무 흐름을 더 구체적으로 정리하고 싶습니다.
 
 ■ 과제명
 (과제명)
@@ -56,14 +70,20 @@ export const prompts: PromptTemplate[] = [
 ■ 요청
 1. AI 적용 전 업무 흐름 (단계별, 시간 포함)
 2. AI 적용 후 업무 흐름 (단계별, 예상 시간)
-3. 각 단계에서 사람이 하는 일 vs AI가 하는 일`,
+3. 각 단계에서 사람이 하는 일 vs AI가 하는 일
+
+조건:
+- 제공된 업무 설명만 기반으로 구체화
+- 추측이나 일반론 금지`,
+    temperature: 0.25,
   },
   {
     id: 's17-p04',
     title: '기대 효과 정리',
     description: '전/후 비교 기반 효과 정리',
     category: 'general',
-    prompt: `내 과제의 기대 효과를 정리하고 싶습니다.
+    systemPrompt: getSystemPromptByCategory('general'),
+    userPrompt: `내 과제의 기대 효과를 정리하고 싶습니다.
 
 ■ 전/후 비교
 (전/후 비교 내용 붙여넣기)
@@ -76,6 +96,11 @@ export const prompts: PromptTemplate[] = [
 
 ■ 조건
 - 과장하지 않고 현실적으로
-- 가능하면 숫자로 표현`,
+- 가능하면 숫자로 표현
+
+조건:
+- 제공된 전/후 비교 내용만 기반으로 분석
+- 추측하지 말 것`,
+    temperature: 0.25,
   },
 ];
