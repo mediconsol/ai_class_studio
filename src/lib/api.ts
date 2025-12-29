@@ -136,9 +136,12 @@ export const submissionApi = {
 
   /**
    * 모든 제출물 조회 (평가자 전용)
+   * 백엔드에서 역할에 따라 자동으로 필터링
+   * - 학생: 자신의 제출물만
+   * - 평가자: 제출된(submitted) 모든 제출물
    */
   async getAllForReviewer(): Promise<{ submissions: Submission[] }> {
-    return apiRequest<{ submissions: Submission[] }>('/api/reviewer/submissions')
+    return apiRequest<{ submissions: Submission[] }>('/api/submissions')
   },
 }
 
