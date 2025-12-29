@@ -53,7 +53,7 @@ export const authenticate = async (
     // req.user에 사용자 정보 추가
     req.user = user
 
-    next()
+    return next()
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({ error: 'Invalid token' })
@@ -84,6 +84,6 @@ export const authorize = (...allowedRoles: UserRole[]) => {
       })
     }
 
-    next()
+    return next()
   }
 }

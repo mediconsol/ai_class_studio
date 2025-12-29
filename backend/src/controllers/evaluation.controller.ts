@@ -119,10 +119,10 @@ export const createOrUpdate = async (req: Request, res: Response) => {
       })
     }
 
-    res.json({ evaluation })
+    return res.json({ evaluation })
   } catch (error) {
     console.error('Create/Update evaluation error:', error)
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to save evaluation',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })
@@ -187,10 +187,10 @@ export const getBySubmissionId = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Evaluation not found' })
     }
 
-    res.json({ evaluation })
+    return res.json({ evaluation })
   } catch (error) {
     console.error('Get evaluation error:', error)
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to get evaluation',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })

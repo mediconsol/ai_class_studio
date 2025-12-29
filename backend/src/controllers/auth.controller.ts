@@ -57,7 +57,7 @@ export const login = async (req: Request, res: Response) => {
     )
 
     // 응답
-    res.json({
+    return res.json({
       token,
       user: {
         id: user.id,
@@ -68,7 +68,7 @@ export const login = async (req: Request, res: Response) => {
     })
   } catch (error) {
     console.error('Login error:', error)
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Login failed',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })
@@ -86,12 +86,12 @@ export const me = async (req: Request, res: Response) => {
       return res.status(401).json({ error: 'Unauthorized' })
     }
 
-    res.json({
+    return res.json({
       user: req.user,
     })
   } catch (error) {
     console.error('Get user error:', error)
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to get user information',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })

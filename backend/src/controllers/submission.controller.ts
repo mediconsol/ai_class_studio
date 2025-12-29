@@ -86,10 +86,10 @@ export const createOrUpdate = async (req: Request, res: Response) => {
       })
     }
 
-    res.json({ submission })
+    return res.json({ submission })
   } catch (error) {
     console.error('Create/Update submission error:', error)
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to save submission',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })
@@ -162,10 +162,10 @@ export const getMySubmissions = async (req: Request, res: Response) => {
       },
     })
 
-    res.json({ submissions })
+    return res.json({ submissions })
   } catch (error) {
     console.error('Get submissions error:', error)
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to get submissions',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })
@@ -226,10 +226,10 @@ export const getById = async (req: Request, res: Response) => {
       return res.status(403).json({ error: 'Forbidden' })
     }
 
-    res.json({ submission })
+    return res.json({ submission })
   } catch (error) {
     console.error('Get submission error:', error)
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to get submission',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })
