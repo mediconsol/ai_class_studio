@@ -15,29 +15,27 @@
 
 ---
 
-## 🗓️ Week 1: 백엔드 기반 구축 (2025-12-30 ~ 2026-01-05)
+## 🗓️ Week 1: 백엔드 기반 구축 ✅ 완료 (2025-12-29)
 
-### Day 1: Railway 프로젝트 설정
+### Day 1: Railway 프로젝트 설정 ✅
 
-#### ⏳ 1.1 Railway 계정 및 프로젝트 생성
-- [ ] Railway 계정 생성/로그인 (https://railway.app)
-- [ ] GitHub 계정 연동
-- [ ] 새 프로젝트 생성
-  - Project name: `ai-class-studio-backend`
-- [ ] PostgreSQL 데이터베이스 추가
-  - New → Database → PostgreSQL
-  - 자동으로 `DATABASE_URL` 환경변수 생성됨
-- [ ] 환경변수 설정
-  - `NODE_ENV=production`
-  - `JWT_SECRET=<강력한_랜덤_문자열>` (예: openssl rand -base64 32)
+#### ✅ 1.1 Railway 계정 및 프로젝트 생성
+- [x] Railway 계정 생성/로그인 (https://railway.app)
+- [x] GitHub 계정 연동
+- [x] 새 프로젝트 생성
+- [x] PostgreSQL 데이터베이스 추가
+  - Railway PostgreSQL 서비스 생성 완료
+  - DATABASE_URL 자동 생성됨
+- [x] 환경변수 설정 (11개)
+  - JWT_SECRET, NODE_ENV, CORS_ORIGIN, AI API Keys 등
 
-#### ⏳ 1.2 백엔드 프로젝트 초기 설정
-- [ ] 프로젝트 루트에 `backend/` 디렉토리 생성
+#### ✅ 1.2 백엔드 프로젝트 초기 설정
+- [x] 프로젝트 루트에 `backend/` 디렉토리 생성
   ```bash
   mkdir backend
   cd backend
   ```
-- [ ] npm 초기화 및 패키지 설치
+- [x] npm 초기화 및 패키지 설치
   ```bash
   npm init -y
   npm install express cors dotenv
@@ -46,48 +44,23 @@
   npm install -D typescript @types/node @types/express @types/bcrypt @types/jsonwebtoken
   npm install -D tsx nodemon
   ```
-- [ ] `package.json` scripts 추가
-  ```json
-  {
-    "scripts": {
-      "dev": "nodemon --exec tsx src/index.ts",
-      "build": "tsc",
-      "start": "node dist/index.js",
-      "prisma:migrate": "prisma migrate deploy",
-      "prisma:generate": "prisma generate"
-    }
-  }
-  ```
-- [ ] `tsconfig.json` 생성
-  ```json
-  {
-    "compilerOptions": {
-      "target": "ES2022",
-      "module": "commonjs",
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"]
-  }
-  ```
+- [x] `package.json` scripts 추가
+  - dev, build, start, prisma:migrate, prisma:generate, prisma:seed 설정 완료
+- [x] `tsconfig.json` 생성
+  - strict mode 활성화, prisma 디렉토리 exclude 처리
 
-### Day 2: Prisma 및 데이터베이스 설정
+### Day 2: Prisma 및 데이터베이스 설정 ✅
 
-#### ⏳ 1.3 Prisma 초기화
-- [ ] Prisma 초기화
+#### ✅ 1.3 Prisma 초기화
+- [x] Prisma 초기화
   ```bash
   npx prisma init
   ```
-- [ ] `.env` 파일 생성 (로컬 개발용)
-  ```
-  DATABASE_URL="postgresql://user:password@localhost:5432/aiclass"
-  JWT_SECRET="your-secret-key"
-  ```
-- [ ] `prisma/schema.prisma` 작성
+- [x] `.env` 파일 생성 (Railway PostgreSQL 연결)
+  - DATABASE_URL, JWT_SECRET, AI API Keys 설정 완료
+- [x] `prisma/schema.prisma` 작성
+  - User, Submission, Evaluation 모델 정의 완료
+  - UserRole, SubmissionStatus enum 정의
   ```prisma
   generator client {
     provider = "prisma-client-js"
@@ -159,65 +132,29 @@
   }
   ```
 
-#### ⏳ 1.4 마이그레이션 및 Seed 데이터
-- [ ] 마이그레이션 생성 및 실행
-  ```bash
-  npx prisma migrate dev --name init
-  ```
-- [ ] `prisma/seed.ts` 생성 (테스트 계정)
-  ```typescript
-  import { PrismaClient } from '@prisma/client'
-  import bcrypt from 'bcrypt'
+#### ✅ 1.4 마이그레이션 및 Seed 데이터
+- [x] 마이그레이션 생성 및 실행
+  - Railway PostgreSQL에 테이블 생성 완료 (users, submissions, evaluations)
+- [x] `prisma/seed.ts` 생성 (테스트 계정)
+  - 4개 계정 생성: instructor1, student1, student2, reviewer1 (비밀번호: test1234)
+- [x] `package.json`에 prisma seed 설정 추가
+- [x] Seed 실행 완료
+  - 테스트 제출물 3개, 평가 1개 생성
 
-  const prisma = new PrismaClient()
+### Day 3: Express API 구현 (인증) ✅
 
-  async function main() {
-    const hashedPassword = await bcrypt.hash('test1234', 10)
+#### ✅ 1.5 프로젝트 구조 생성
+- [x] `backend/src/` 디렉토리 구조 생성
+  - routes, controllers, middleware, utils 폴더 구성 완료
 
-    await prisma.user.createMany({
-      data: [
-        { email: 'student1@test.com', passwordHash: hashedPassword, role: 'student', name: '학생1' },
-        { email: 'student2@test.com', passwordHash: hashedPassword, role: 'student', name: '학생2' },
-        { email: 'reviewer1@test.com', passwordHash: hashedPassword, role: 'reviewer', name: '평가자1' },
-        { email: 'instructor1@test.com', passwordHash: hashedPassword, role: 'instructor', name: '강사1' }
-      ]
-    })
-    console.log('Seed 데이터 생성 완료')
-  }
+#### ✅ 1.6 Prisma Client 설정
+- [x] `src/utils/prisma.ts` 생성
+  - Prisma 클라이언트 싱글톤 인스턴스 구성
 
-  main()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect())
-  ```
-- [ ] `package.json`에 prisma seed 설정 추가
-  ```json
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  }
-  ```
-- [ ] Seed 실행
-  ```bash
-  npx prisma db seed
-  ```
-
-### Day 3: Express API 구현 (인증)
-
-#### ⏳ 1.5 프로젝트 구조 생성
-- [ ] `backend/src/` 디렉토리 구조 생성
-  ```bash
-  mkdir -p src/{routes,controllers,middlewares,services,utils}
-  ```
-
-#### ⏳ 1.6 Prisma Client 설정
-- [ ] `src/utils/prisma.ts` 생성
-  ```typescript
-  import { PrismaClient } from '@prisma/client'
-
-  export const prisma = new PrismaClient()
-  ```
-
-#### ⏳ 1.7 인증 컨트롤러 구현
-- [ ] `src/controllers/auth.controller.ts` 생성
+#### ✅ 1.7 인증 컨트롤러 구현
+- [x] `src/controllers/auth.controller.ts` 생성
+  - login: bcrypt 비밀번호 검증 + JWT 토큰 발급
+  - getMe: 현재 사용자 정보 조회
   ```typescript
   import bcrypt from 'bcrypt'
   import jwt from 'jsonwebtoken'
@@ -278,150 +215,73 @@
   }
   ```
 
-#### ⏳ 1.8 인증 미들웨어 구현
-- [ ] `src/middlewares/auth.middleware.ts` 생성
-  ```typescript
-  import jwt from 'jsonwebtoken'
-  import { Request, Response, NextFunction } from 'express'
+#### ✅ 1.8 인증 미들웨어 구현
+- [x] `src/middleware/auth.middleware.ts` 생성
+  - authenticate: JWT 토큰 검증 미들웨어
+  - authorize: 역할 기반 접근 제어 미들웨어
+- [x] `src/middleware/error.middleware.ts` 생성
+  - notFoundHandler: 404 에러 핸들러
+  - errorHandler: 전역 에러 핸들러
 
-  export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization?.replace('Bearer ', '')
+#### ✅ 1.9 인증 라우트 구현
+- [x] `src/routes/auth.routes.ts` 생성
+  - POST /api/auth/login
+  - GET /api/auth/me (인증 필요)
 
-    if (!token) {
-      return res.status(401).json({ error: '인증이 필요합니다' })
-    }
+### Day 4-5: Express 앱 완성 및 배포 ✅
 
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!)
-      ;(req as any).user = decoded
-      next()
-    } catch (error) {
-      return res.status(401).json({ error: '유효하지 않은 토큰입니다' })
-    }
-  }
-  ```
-- [ ] `src/middlewares/role.middleware.ts` 생성
-  ```typescript
-  import { Request, Response, NextFunction } from 'express'
+#### ✅ 1.10 Express 앱 엔트리포인트
+- [x] `src/index.ts` 생성
+  - Express 서버 구성 완료
+  - CORS 설정 (localhost:7900, inno.mediconsol.com, aiclassstudio.vercel.app)
+  - Health check 엔드포인트 (/health)
+  - API 라우트 연결 (auth, submissions, evaluations)
+  - 전역 에러 핸들러 적용
 
-  export function requireRole(...allowedRoles: string[]) {
-    return (req: Request, res: Response, next: NextFunction) => {
-      const userRole = (req as any).user?.role
+#### ✅ 1.11 Submissions & Evaluations API 구현
+- [x] `src/controllers/submission.controller.ts` 생성
+  - createOrUpdate: 제출물 생성/수정 (upsert 로직)
+  - getMySubmissions: 내 제출물 목록 (role별 필터링)
+  - getById: 제출물 상세
+- [x] `src/routes/submission.routes.ts` 생성
+- [x] `src/controllers/evaluation.controller.ts` 생성
+  - createOrUpdate: 평가 생성/수정 (reviewer 전용, 점수 0-100 검증)
+  - getBySubmissionId: 제출물별 평가 조회
+- [x] `src/routes/evaluation.routes.ts` 생성
 
-      if (!allowedRoles.includes(userRole)) {
-        return res.status(403).json({ error: '권한이 없습니다' })
-      }
+#### ✅ 1.12 API 통합 완료
+- [x] 모든 라우트 `src/index.ts`에 등록
+  - /api/auth
+  - /api/submissions (학생/평가자 권한 분리)
+  - /api/evaluations (평가자 전용)
 
-      next()
-    }
-  }
-  ```
+#### ✅ 1.13 로컬 테스트
+- [x] 로컬 개발 서버 테스트 완료
+- [x] API 엔드포인트 테스트
+  - POST /api/auth/login ✅
+  - GET /api/auth/me ✅
+  - POST /api/submissions ✅
+  - GET /api/submissions (학생/평가자별) ✅
+  - POST /api/evaluations ✅
 
-#### ⏳ 1.9 인증 라우트 구현
-- [ ] `src/routes/auth.routes.ts` 생성
-  ```typescript
-  import express from 'express'
-  import { login, getMe } from '../controllers/auth.controller'
-  import { authMiddleware } from '../middlewares/auth.middleware'
-
-  const router = express.Router()
-
-  router.post('/login', login)
-  router.get('/me', authMiddleware, getMe)
-
-  export default router
-  ```
-
-### Day 4-5: Express 앱 완성 및 배포
-
-#### ⏳ 1.10 Express 앱 엔트리포인트
-- [ ] `src/index.ts` 생성
-  ```typescript
-  import express from 'express'
-  import cors from 'cors'
-  import dotenv from 'dotenv'
-  import authRoutes from './routes/auth.routes'
-
-  dotenv.config()
-
-  const app = express()
-  const PORT = process.env.PORT || 3000
-
-  // CORS 설정 (프론트엔드 7900번 포트 허용)
-  const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [
-    'http://localhost:7900',
-    'https://inno.mediconsol.com',
-    'https://aiclassstudio.vercel.app',
-  ]
-
-  app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true)
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true)
-      } else {
-        callback(new Error('CORS 차단'))
-      }
-    },
-    credentials: true,
-  }))
-
-  app.use(express.json())
-
-  // Health check
-  app.get('/health', (req, res) => {
-    res.json({ status: 'ok' })
-  })
-
-  // API Routes
-  app.use('/api/auth', authRoutes)
-
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`)
-  })
-  ```
-
-#### ⏳ 1.11 Submissions & Evaluations API 구현
-- [ ] `src/controllers/submissions.controller.ts` 생성
-  - `getMySubmissions`: 내 제출물 목록
-  - `createSubmission`: 제출물 저장/제출
-  - `getSubmissionById`: 제출물 상세
-  - `updateSubmission`: 제출물 수정
-  - `deleteSubmission`: 제출물 삭제
-- [ ] `src/routes/submissions.routes.ts` 생성
-- [ ] `src/controllers/evaluations.controller.ts` 생성
-  - `getMyEvaluations`: 내 평가 목록
-  - `createEvaluation`: 평가 생성 (평가자 전용)
-  - `updateEvaluation`: 평가 수정 (평가자 전용)
-- [ ] `src/routes/evaluations.routes.ts` 생성
-
-#### ⏳ 1.12 Reviewer API 구현
-- [ ] `src/controllers/reviewer.controller.ts` 생성
-  - `getAllSubmissions`: 모든 제출물 목록 (평가자 전용)
-  - `getSubmissionById`: 제출물 상세 (평가자 전용)
-- [ ] `src/routes/reviewer.routes.ts` 생성
-- [ ] `src/index.ts`에 라우트 추가
-
-#### ⏳ 1.13 로컬 테스트
-- [ ] `backend/` 디렉토리에서 `npm run dev` 실행
-- [ ] Postman/Thunder Client로 API 테스트
-  - `POST /api/auth/login` (로그인)
-  - `GET /api/auth/me` (현재 사용자)
-  - `GET /health` (헬스체크)
-- [ ] 프론트엔드 7900 포트에서 CORS 정상 동작 확인
-
-#### ⏳ 1.14 Railway 배포
-- [ ] Railway 프로젝트에 GitHub 레포 연동
-- [ ] Root Directory: `backend/` 설정
-- [ ] Build Command: `npm run build`
-- [ ] Start Command: `npm run start`
-- [ ] 환경변수 설정 (Railway Dashboard)
-  - `DATABASE_URL` (자동 생성됨)
-  - `JWT_SECRET` (openssl rand -base64 32로 생성)
-  - `NODE_ENV=production`
-  - `CORS_ORIGIN=https://inno.mediconsol.com,https://aiclassstudio.vercel.app`
-- [ ] 배포 성공 확인 및 URL 복사
-- [ ] Vercel 환경변수에 `VITE_API_URL` 추가 (Railway URL)
+#### ✅ 1.14 Railway 배포
+- [x] Railway 프로젝트 생성 및 GitHub 연동
+- [x] nixpacks.toml 생성 (Node.js 20.x 명시)
+- [x] Root Directory: `backend` 설정
+- [x] Build/Start 명령어 설정
+- [x] 환경변수 11개 설정 완료
+  - DATABASE_URL (Railway PostgreSQL)
+  - JWT_SECRET (암호화 키 생성)
+  - NODE_ENV=production
+  - CORS_ORIGIN
+  - AI API Keys (ANTHROPIC, OPENAI, GOOGLE)
+  - AI_REQUEST_TIMEOUT, AI_MAX_RETRIES, LOG_LEVEL
+- [x] 배포 성공 확인
+  - URL: https://backend-production-85ff.up.railway.app
+  - Health check, Login, Submissions, Evaluations API 테스트 완료
+- [x] 데이터베이스 검증
+  - 4개 테이블 생성 (users, submissions, evaluations, _prisma_migrations)
+  - Seed 데이터 확인 (4 users, 3 submissions, 1 evaluation)
 
 ---
 
