@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Session from "./pages/Session";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/student/StudentDashboard";
+import StudentPractice from "./pages/student/StudentPractice";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
@@ -55,6 +56,14 @@ function AppRoutes() {
             element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/practice/:id"
+            element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentPractice />
               </ProtectedRoute>
             }
           />
