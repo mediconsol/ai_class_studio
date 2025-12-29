@@ -44,8 +44,16 @@ export default function Login() {
     setIsLoading(true)
 
     try {
-      await login(email, password)
-      navigate('/')
+      const { user } = await login(email, password)
+
+      // 역할별 리다이렉트
+      if (user.role === 'student') {
+        navigate('/student')
+      } else if (user.role === 'reviewer') {
+        navigate('/reviewer')
+      } else {
+        navigate('/')
+      }
     } catch (err) {
       setStudentError(err instanceof Error ? err.message : '로그인에 실패했습니다')
     } finally {

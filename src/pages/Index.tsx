@@ -86,14 +86,27 @@ const Index = () => {
                 </div>
               )}
               {user && !isInstructor && (
-                <div className="text-right text-sm">
-                  <p className="font-semibold text-foreground">{user.name || user.email}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {user.role === 'student' && '학생'}
-                    {user.role === 'reviewer' && '평가자'}
-                    {user.role === 'instructor' && '강사'}
-                  </p>
-                </div>
+                <>
+                  <div className="text-right text-sm">
+                    <p className="font-semibold text-foreground">{user.name || user.email}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {user.role === 'student' && '학생'}
+                      {user.role === 'reviewer' && '평가자'}
+                      {user.role === 'instructor' && '강사'}
+                    </p>
+                  </div>
+                  {user.role === 'student' && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => navigate('/student')}
+                      className="flex items-center gap-2"
+                    >
+                      <UserCircle className="w-4 h-4" />
+                      나의 대시보드
+                    </Button>
+                  )}
+                </>
               )}
               <Button
                 variant="outline"

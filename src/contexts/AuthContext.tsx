@@ -5,7 +5,7 @@ interface AuthContextType {
   user: User | null
   isLoading: boolean
   isAuthenticated: boolean
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<{ user: User; token: string }>
   logout: () => void
 }
 
@@ -51,6 +51,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { token, user } = await authApi.login(email, password)
       tokenStorage.set(token)
       setUser(user)
+      return { user, token }
     } catch (error) {
       console.error('Login failed:', error)
       throw error
