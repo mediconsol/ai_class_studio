@@ -96,9 +96,9 @@ export default function Login() {
               {/* Notice */}
               <div className="mb-6 p-4 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
                 <p className="text-sm text-amber-800 dark:text-amber-200">
-                  <strong>비공개 사이트 안내</strong>
+                  <strong>사이트 안내</strong>
                   <br />
-                  교강사용 비공개 사이트이며 부여받은 아이디와 패스워드로만 접속하실 수 있습니다.
+                  교강사용 사이트이며 부여받은 아이디와 패스워드로만 접속하실 수 있습니다.
                 </p>
               </div>
 
