@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { prisma } from './utils/prisma'
 import authRoutes from './routes/auth.routes'
 import submissionRoutes from './routes/submission.routes'
+import evaluationRoutes from './routes/evaluation.routes'
 import { notFoundHandler, errorHandler } from './middleware/error.middleware'
 
 // 환경변수 로드
@@ -45,7 +46,7 @@ app.get('/health', (req, res) => {
 // API 라우트
 app.use('/api/auth', authRoutes)
 app.use('/api/submissions', submissionRoutes)
-// app.use('/api/evaluations', evaluationRoutes)  // Week 1 Day 5
+app.use('/api/evaluations', evaluationRoutes)
 
 // 404 핸들러
 app.use(notFoundHandler)
