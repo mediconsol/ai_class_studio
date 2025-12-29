@@ -24,6 +24,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const initAuth = async () => {
       const token = tokenStorage.get()
 
+      // 강사용 기존 토큰은 백엔드 호출 건너뛰기
+      if (token === 'authenticated') {
+        setIsLoading(false)
+        return
+      }
+
       if (token) {
         try {
           const { user } = await authApi.me()

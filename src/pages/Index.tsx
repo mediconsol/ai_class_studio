@@ -5,15 +5,26 @@ import { getAllSessions, courseMeta } from "@/data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { tokenStorage } from "@/lib/api";
 
 const Index = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const sessions = getAllSessions();
 
+  // 강사 여부 확인
+  const isInstructor = tokenStorage.get() === 'authenticated'
+
   const handleLogout = () => {
     if (confirm("로그아웃 하시겠습니까?")) {
-      logout();
+      if (isInstructor) {
+        // 강사는 기존 방식으로 로그아웃
+        localStorage.removeItem("auth_token");
+        window.location.href = '/login';
+      } else {
+        // 학생/평가자는 AuthContext 사용
+        logout();
+      }
     }
   };
 
@@ -68,7 +79,13 @@ const Index = () => {
                 alt="이노솔루션"
                 className="h-10 object-contain"
               />
-              {user && (
+              {isInstructor && (
+                <div className="text-right text-sm">
+                  <p className="font-semibold text-foreground">교강사</p>
+                  <p className="text-xs text-muted-foreground">전체 권한</p>
+                </div>
+              )}
+              {user && !isInstructor && (
                 <div className="text-right text-sm">
                   <p className="font-semibold text-foreground">{user.name || user.email}</p>
                   <p className="text-xs text-muted-foreground">
