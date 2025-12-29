@@ -47,15 +47,20 @@ export const createOrUpdate = async (req: Request, res: Response) => {
       })
     }
 
-    // 기존 평가 조회
+    // 현재 평가자의 기존 평가 조회
     const existingEvaluation = await prisma.evaluation.findUnique({
-      where: { submissionId },
+      where: {
+        submissionId_reviewerId: {
+          submissionId,
+          reviewerId: req.user.id,
+        },
+      },
     })
 
     let evaluation
 
     if (existingEvaluation) {
-      // 업데이트: 기존 평가가 있으면 업데이트
+      // 업데이트: 기존 평가가 있으면 업데이트 (본인 평가만 수정 가능)
       evaluation = await prisma.evaluation.update({
         where: { id: existingEvaluation.id },
         data: {
@@ -130,9 +135,10 @@ export const createOrUpdate = async (req: Request, res: Response) => {
 }
 
 /**
- * 제출물의 평가 조회
+ * 제출물의 평가 목록 조회
  * GET /api/evaluations/:submissionId
  * 학생: 자신의 제출물 평가만, 평가자: 모든 평가
+ * 여러 평가자가 평가한 경우 배열로 반환
  */
 export const getBySubmissionId = async (req: Request, res: Response) => {
   try {
@@ -156,8 +162,8 @@ export const getBySubmissionId = async (req: Request, res: Response) => {
       return res.status(403).json({ error: 'Forbidden' })
     }
 
-    // 평가 조회
-    const evaluation = await prisma.evaluation.findUnique({
+    // 평가 목록 조회 (여러 평가자의 평가)
+    const evaluations = await prisma.evaluation.findMany({
       where: { submissionId },
       include: {
         reviewer: {
@@ -168,30 +174,17 @@ export const getBySubmissionId = async (req: Request, res: Response) => {
             role: true,
           },
         },
-        submission: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                email: true,
-                name: true,
-                role: true,
-              },
-            },
-          },
-        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     })
 
-    if (!evaluation) {
-      return res.status(404).json({ error: 'Evaluation not found' })
-    }
-
-    return res.json({ evaluation })
+    return res.json({ evaluations })
   } catch (error) {
-    console.error('Get evaluation error:', error)
+    console.error('Get evaluations error:', error)
     return res.status(500).json({
-      error: 'Failed to get evaluation',
+      error: 'Failed to get evaluations',
       message: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
     })
   }

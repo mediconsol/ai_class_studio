@@ -32,7 +32,7 @@ interface Submission {
   status: 'saved' | 'submitted'
   createdAt: string
   updatedAt: string
-  evaluation?: Evaluation
+  evaluations?: Evaluation[] // 1:N 관계 (여러 평가자가 평가 가능)
   user?: User // 평가자가 조회할 때 포함됨
 }
 
@@ -43,6 +43,8 @@ interface Evaluation {
   score: number
   comment: string | null
   createdAt: string
+  updatedAt: string
+  reviewer?: User // 평가자 정보 (조회 시 포함)
 }
 
 /**
@@ -166,10 +168,11 @@ export const evaluationApi = {
   },
 
   /**
-   * 제출물별 평가 조회
+   * 제출물별 평가 목록 조회
+   * 여러 평가자가 평가한 경우 배열로 반환
    */
-  async getBySubmissionId(submissionId: string): Promise<{ evaluation: Evaluation | null }> {
-    return apiRequest<{ evaluation: Evaluation | null }>(
+  async getBySubmissionId(submissionId: string): Promise<{ evaluations: Evaluation[] }> {
+    return apiRequest<{ evaluations: Evaluation[] }>(
       `/api/evaluations/${submissionId}`
     )
   },

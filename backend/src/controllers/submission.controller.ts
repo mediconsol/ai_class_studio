@@ -145,7 +145,7 @@ export const getMySubmissions = async (req: Request, res: Response) => {
             role: true,
           },
         },
-        evaluation: {
+        evaluations: {
           include: {
             reviewer: {
               select: {
@@ -154,6 +154,9 @@ export const getMySubmissions = async (req: Request, res: Response) => {
                 email: true,
               },
             },
+          },
+          orderBy: {
+            createdAt: 'desc',
           },
         },
       },
@@ -197,7 +200,7 @@ export const getById = async (req: Request, res: Response) => {
             role: true,
           },
         },
-        evaluation: {
+        evaluations: {
           include: {
             reviewer: {
               select: {
@@ -206,6 +209,9 @@ export const getById = async (req: Request, res: Response) => {
                 email: true,
               },
             },
+          },
+          orderBy: {
+            createdAt: 'desc',
           },
         },
       },

@@ -45,19 +45,19 @@ model User {
 }
 
 model Submission {
-  id         String           @id @default(uuid())
-  userId     String           @map("user_id")
-  sessionId  Int              @map("session_id")
-  prompt     String           @db.Text
-  result     String           @db.Text
-  modelId    String           @map("model_id")
-  status     SubmissionStatus
-  createdAt  DateTime         @default(now()) @map("created_at")
-  updatedAt  DateTime         @updatedAt @map("updated_at")
+  id          String           @id @default(uuid())
+  userId      String           @map("user_id")
+  sessionId   Int              @map("session_id")
+  prompt      String           @db.Text
+  result      String           @db.Text
+  modelId     String           @map("model_id")
+  status      SubmissionStatus
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
 
   // Relations
-  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  evaluation Evaluation?
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evaluations Evaluation[]
 
   // Indexes
   @@index([userId, sessionId])
@@ -67,11 +67,12 @@ model Submission {
 
 model Evaluation {
   id           String   @id @default(uuid())
-  submissionId String   @unique @map("submission_id")
+  submissionId String   @map("submission_id")
   reviewerId   String   @map("reviewer_id")
   score        Int
   comment      String?  @db.Text
   createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
   submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
@@ -80,5 +81,9 @@ model Evaluation {
   // Indexes
   @@index([submissionId])
   @@index([reviewerId])
+
+  // 한 평가자는 동일 제출물을 한 번만 평가 가능
+  @@unique([submissionId, reviewerId])
+
   @@map("evaluations")
 }

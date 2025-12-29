@@ -44,7 +44,7 @@ export default function StudentDashboard() {
 
           let status: SessionStatus = 'not_started'
           if (submission) {
-            if (submission.evaluation) {
+            if (submission.evaluations && submission.evaluations.length > 0) {
               status = 'evaluated'
             } else if (submission.status === 'submitted') {
               status = 'submitted'
@@ -225,21 +225,28 @@ export default function StudentDashboard() {
                 </p>
 
                 {/* Evaluation Score */}
-                {session.submission?.evaluation && (
+                {session.submission?.evaluations && session.submission.evaluations.length > 0 && (
                   <div className="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-green-800 dark:text-green-200">
-                        평가 점수
+                        평균 점수 ({session.submission.evaluations.length}명 평가)
                       </span>
                       <span className="text-xl font-bold text-green-600">
-                        {session.submission.evaluation.score}점
+                        {(
+                          session.submission.evaluations.reduce((sum, ev) => sum + ev.score, 0) /
+                          session.submission.evaluations.length
+                        ).toFixed(1)}
+                        점
                       </span>
                     </div>
-                    {session.submission.evaluation.comment && (
-                      <p className="text-sm text-green-700 dark:text-green-300 mt-2">
-                        {session.submission.evaluation.comment}
-                      </p>
-                    )}
+                    <div className="mt-2 text-xs text-green-700 dark:text-green-300">
+                      {session.submission.evaluations.map((ev) => (
+                        <div key={ev.id} className="flex items-center justify-between py-1">
+                          <span>{ev.reviewer?.name || ev.reviewer?.email || '평가자'}</span>
+                          <span className="font-medium">{ev.score}점</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
