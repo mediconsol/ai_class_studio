@@ -77,6 +77,11 @@ const ResourcesPanel = ({ resources }: ResourcesPanelProps) => {
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeColor(resource.type)}`}>
                       {getTypeLabel(resource.type)}
                     </span>
+                    {(!resource.url || resource.url === '#') && (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                        준비중
+                      </span>
+                    )}
                   </div>
                   <p className="text-muted-foreground mb-4">
                     {resource.description}
@@ -96,10 +101,18 @@ const ResourcesPanel = ({ resources }: ResourcesPanelProps) => {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2">
-                  <button className="p-2.5 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                  <button
+                    className="p-2.5 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                    disabled={!resource.url || resource.url === '#'}
+                    title={!resource.url || resource.url === '#' ? "준비중입니다" : "새 창에서 열기"}
+                  >
                     <ExternalLink className="w-5 h-5" />
                   </button>
-                  <button className="p-2.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-colors shadow-soft">
+                  <button
+                    className="p-2.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-colors shadow-soft disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled={!resource.url || resource.url === '#'}
+                    title={!resource.url || resource.url === '#' ? "준비중입니다" : "다운로드"}
+                  >
                     <Download className="w-5 h-5" />
                   </button>
                 </div>

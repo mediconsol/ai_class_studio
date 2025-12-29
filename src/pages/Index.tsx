@@ -4,15 +4,16 @@ import { MediConsolLogo } from "@/components/MediConsolLogo";
 import { getAllSessions, courseMeta } from "@/data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const sessions = getAllSessions();
 
   const handleLogout = () => {
     if (confirm("로그아웃 하시겠습니까?")) {
-      localStorage.removeItem("auth_token");
-      window.location.reload();
+      logout();
     }
   };
 
@@ -60,13 +61,23 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Right: Inno Solution Logo & Logout */}
+            {/* Right: Inno Solution Logo & User Info & Logout */}
             <div className="flex items-center justify-end gap-4">
               <img
                 src="/inno-solution-logo.png"
                 alt="이노솔루션"
                 className="h-10 object-contain"
               />
+              {user && (
+                <div className="text-right text-sm">
+                  <p className="font-semibold text-foreground">{user.name || user.email}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {user.role === 'student' && '학생'}
+                    {user.role === 'reviewer' && '평가자'}
+                    {user.role === 'instructor' && '강사'}
+                  </p>
+                </div>
+              )}
               <Button
                 variant="outline"
                 size="sm"
