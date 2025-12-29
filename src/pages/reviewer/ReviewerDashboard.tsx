@@ -120,14 +120,9 @@ export default function ReviewerDashboard() {
     <main className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3">
-            <ClipboardList className="w-8 h-8 text-primary" />
-            <h1 className="text-3xl font-display font-bold">평가자 대시보드</h1>
-          </div>
-          <Button variant="outline" onClick={() => navigate('/')}>
-            메인으로
-          </Button>
+        <div className="flex items-center gap-3 mb-2">
+          <ClipboardList className="w-8 h-8 text-primary" />
+          <h1 className="text-3xl font-display font-bold">평가자 대시보드</h1>
         </div>
         <p className="text-muted-foreground">학생들의 실습 제출물을 평가하고 관리합니다.</p>
       </div>
