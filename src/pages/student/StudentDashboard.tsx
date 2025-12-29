@@ -6,7 +6,7 @@ import { getAllSessions } from '@/data'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { BookOpen, CheckCircle2, FileEdit, Save, ArrowLeft } from 'lucide-react'
+import { BookOpen, CheckCircle2, FileEdit, Save, LogOut } from 'lucide-react'
 import { MediConsolLogo } from '@/components/MediConsolLogo'
 
 type SessionStatus = 'not_started' | 'saved' | 'submitted' | 'evaluated'
@@ -22,9 +22,16 @@ interface SessionWithStatus {
 
 export default function StudentDashboard() {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [sessions, setSessions] = useState<SessionWithStatus[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const handleLogout = () => {
+    if (confirm('로그아웃 하시겠습니까?')) {
+      logout()
+      navigate('/login')
+    }
+  }
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -145,14 +152,27 @@ export default function StudentDashboard() {
                   학생 대시보드
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  {user?.name || user?.email}님의 실습 현황
+                  나의 실습 현황
                 </p>
               </div>
             </div>
-            <Button variant="outline" onClick={() => navigate('/')}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              전체 차시 보기
-            </Button>
+            <div className="flex items-center gap-4">
+              {user && (
+                <div className="text-right text-sm">
+                  <p className="font-semibold text-foreground">{user.name || user.email}</p>
+                  <p className="text-xs text-muted-foreground">학생</p>
+                </div>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                로그아웃
+              </Button>
+            </div>
           </div>
         </div>
       </header>
