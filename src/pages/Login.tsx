@@ -162,6 +162,16 @@ export default function Login() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {/* Notice */}
+              <div className="mb-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>서비스 구축 안내</strong>
+                  <br />
+                  학생(수강생)의 실습 과제 제출 및 평가자를 위한 서비스를 구축 중입니다.
+                </p>
+              </div>
+
+              {/* Login Form */}
               <form onSubmit={handleStudentLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">이메일</Label>
@@ -206,14 +216,6 @@ export default function Login() {
                   {isLoading ? '로그인 중...' : '학생/평가자 로그인'}
                 </Button>
               </form>
-
-              <div className="mt-6 p-4 bg-muted rounded-lg text-sm space-y-2">
-                <p className="font-semibold">테스트 계정:</p>
-                <div className="space-y-1 text-muted-foreground">
-                  <p>학생: student1@test.com / test1234</p>
-                  <p>평가자: reviewer1@test.com / test1234</p>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </div>
