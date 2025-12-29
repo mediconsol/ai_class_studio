@@ -21,12 +21,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { AlertCircle, CheckCircle2, ClipboardList, FileEdit, Filter } from 'lucide-react'
+import { AlertCircle, CheckCircle2, ClipboardList, FileEdit, Filter, LogOut } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
 export default function ReviewerDashboard() {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const { toast } = useToast()
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -34,6 +34,13 @@ export default function ReviewerDashboard() {
   // 필터 상태
   const [sessionFilter, setSessionFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
+
+  const handleLogout = () => {
+    if (confirm('로그아웃 하시겠습니까?')) {
+      logout()
+      navigate('/login')
+    }
+  }
 
   const allSessions = getAllSessions()
 
@@ -117,15 +124,44 @@ export default function ReviewerDashboard() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <ClipboardList className="w-8 h-8 text-primary" />
-          <h1 className="text-3xl font-display font-bold">평가자 대시보드</h1>
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <ClipboardList className="w-8 h-8 text-primary" />
+              <div>
+                <h1 className="text-xl font-display font-semibold text-foreground">
+                  평가자 대시보드
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  학생들의 실습 제출물을 평가하고 관리합니다
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              {user && (
+                <div className="text-right text-sm">
+                  <p className="font-semibold text-foreground">{user.name || user.email}</p>
+                  <p className="text-xs text-muted-foreground">평가자</p>
+                </div>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                로그아웃
+              </Button>
+            </div>
+          </div>
         </div>
-        <p className="text-muted-foreground">학생들의 실습 제출물을 평가하고 관리합니다.</p>
-      </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
 
       {/* 통계 카드 */}
       <div className="grid grid-cols-3 gap-4 mb-8">
@@ -298,5 +334,6 @@ export default function ReviewerDashboard() {
         </CardContent>
       </Card>
     </main>
+    </div>
   )
 }
