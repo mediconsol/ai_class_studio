@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 import { submissionApi, type Submission } from '@/lib/api'
 import { getAllSessions } from '@/data'
 import { Button } from '@/components/ui/button'
@@ -25,6 +26,7 @@ import { useToast } from '@/hooks/use-toast'
 
 export default function ReviewerDashboard() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const { toast } = useToast()
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -67,10 +69,11 @@ export default function ReviewerDashboard() {
     }
 
     // 평가 상태 필터
-    if (statusFilter === 'evaluated' && !sub.evaluation) {
+    const hasEvaluations = sub.evaluations && sub.evaluations.length > 0
+    if (statusFilter === 'evaluated' && !hasEvaluations) {
       return false
     }
-    if (statusFilter === 'not_evaluated' && sub.evaluation) {
+    if (statusFilter === 'not_evaluated' && hasEvaluations) {
       return false
     }
 
@@ -80,8 +83,8 @@ export default function ReviewerDashboard() {
   // 통계 계산
   const stats = {
     total: submissions.length,
-    evaluated: submissions.filter(sub => sub.evaluation).length,
-    notEvaluated: submissions.filter(sub => !sub.evaluation).length,
+    evaluated: submissions.filter(sub => sub.evaluations && sub.evaluations.length > 0).length,
+    notEvaluated: submissions.filter(sub => !sub.evaluations || sub.evaluations.length === 0).length,
   }
 
   // 세션 이름 가져오기
@@ -245,27 +248,52 @@ export default function ReviewerDashboard() {
                       {formatDate(submission.updatedAt)}
                     </TableCell>
                     <TableCell>
-                      {submission.evaluation ? (
-                        <Badge variant="default" className="bg-green-600">
-                          <CheckCircle2 className="w-3 h-3 mr-1" />
-                          평가완료 ({submission.evaluation.score}점)
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="border-orange-500 text-orange-600">
-                          <AlertCircle className="w-3 h-3 mr-1" />
-                          평가 대기
-                        </Badge>
-                      )}
+                      {(() => {
+                        const evaluations = submission.evaluations || []
+                        const myEvaluation = evaluations.find(ev => ev.reviewerId === user?.id)
+                        const avgScore = evaluations.length > 0
+                          ? (evaluations.reduce((sum, ev) => sum + ev.score, 0) / evaluations.length).toFixed(1)
+                          : null
+
+                        if (evaluations.length > 0) {
+                          return (
+                            <div className="space-y-1">
+                              <Badge variant="default" className="bg-green-600">
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                평균 {avgScore}점 ({evaluations.length}명)
+                              </Badge>
+                              {myEvaluation && (
+                                <div className="text-xs text-muted-foreground">
+                                  본인: {myEvaluation.score}점
+                                </div>
+                              )}
+                            </div>
+                          )
+                        }
+                        return (
+                          <Badge variant="outline" className="border-orange-500 text-orange-600">
+                            <AlertCircle className="w-3 h-3 mr-1" />
+                            평가 대기
+                          </Badge>
+                        )
+                      })()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        size="sm"
-                        variant={submission.evaluation ? 'outline' : 'default'}
-                        onClick={() => navigate(`/reviewer/evaluate/${submission.id}`)}
-                      >
-                        <FileEdit className="w-4 h-4 mr-1" />
-                        {submission.evaluation ? '재평가' : '평가하기'}
-                      </Button>
+                      {(() => {
+                        const evaluations = submission.evaluations || []
+                        const myEvaluation = evaluations.find(ev => ev.reviewerId === user?.id)
+
+                        return (
+                          <Button
+                            size="sm"
+                            variant={myEvaluation ? 'outline' : 'default'}
+                            onClick={() => navigate(`/reviewer/evaluate/${submission.id}`)}
+                          >
+                            <FileEdit className="w-4 h-4 mr-1" />
+                            {myEvaluation ? '내 평가 수정' : '평가하기'}
+                          </Button>
+                        )
+                      })()}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -218,7 +218,7 @@ export default function StudentPractice() {
   }
 
   const isSubmitted = submission?.status === 'submitted'
-  const hasEvaluation = !!submission?.evaluation
+  const hasEvaluation = !!(submission?.evaluations && submission.evaluations.length > 0)
 
   return (
     <div className="min-h-screen bg-background">
@@ -261,30 +261,52 @@ export default function StudentPractice() {
 
       <main className="container mx-auto px-6 py-8">
         {/* 평가 결과 (평가 완료된 경우) */}
-        {hasEvaluation && submission?.evaluation && (
+        {hasEvaluation && submission?.evaluations && submission.evaluations.length > 0 && (
           <Card className="mb-6 border-2 border-green-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-600">
                 <CheckCircle2 className="w-5 h-5" />
-                평가 결과
+                평가 결과 ({submission.evaluations.length}명 평가)
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                {/* 평균 점수 */}
                 <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 dark:bg-green-950/20">
                   <span className="text-lg font-semibold text-green-800 dark:text-green-200">
-                    점수
+                    평균 점수
                   </span>
                   <span className="text-3xl font-bold text-green-600">
-                    {submission.evaluation.score}점
+                    {(
+                      submission.evaluations.reduce((sum, ev) => sum + ev.score, 0) /
+                      submission.evaluations.length
+                    ).toFixed(1)}
+                    점
                   </span>
                 </div>
-                {submission.evaluation.comment && (
-                  <div className="p-4 rounded-lg bg-muted">
-                    <p className="text-sm font-semibold mb-2">평가 코멘트</p>
-                    <p className="text-muted-foreground">{submission.evaluation.comment}</p>
-                  </div>
-                )}
+
+                {/* 평가자별 상세 */}
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold">평가자별 상세</p>
+                  {submission.evaluations.map((evaluation, index) => (
+                    <div key={evaluation.id} className="p-4 rounded-lg bg-muted border">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium">
+                          평가자 {index + 1}: {evaluation.reviewer?.name || evaluation.reviewer?.email || '알 수 없음'}
+                        </span>
+                        <span className="text-xl font-bold text-green-600">
+                          {evaluation.score}점
+                        </span>
+                      </div>
+                      {evaluation.comment && (
+                        <div className="mt-2 pt-2 border-t">
+                          <p className="text-sm font-semibold mb-1">평가 코멘트</p>
+                          <p className="text-sm text-muted-foreground">{evaluation.comment}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>

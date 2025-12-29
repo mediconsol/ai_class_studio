@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 import { submissionApi, evaluationApi, type Submission, type Evaluation } from '@/lib/api'
 import { getSession } from '@/data'
 import { AI_MODELS } from '@/services/ai'
@@ -17,6 +18,7 @@ import { useToast } from '@/hooks/use-toast'
 export default function ReviewerEvaluate() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const { toast } = useToast()
 
   const [submission, setSubmission] = useState<Submission | null>(null)
@@ -30,17 +32,18 @@ export default function ReviewerEvaluate() {
   // 제출물 및 기존 평가 조회
   useEffect(() => {
     const fetchData = async () => {
-      if (!id) return
+      if (!id || !user) return
 
       setIsLoading(true)
       try {
         const { submission: data } = await submissionApi.getById(id)
         setSubmission(data)
 
-        // 기존 평가가 있으면 폼에 채우기
-        if (data.evaluation) {
-          setScore(data.evaluation.score.toString())
-          setComment(data.evaluation.comment || '')
+        // 본인의 기존 평가가 있으면 폼에 채우기
+        const myEvaluation = data.evaluations?.find(ev => ev.reviewerId === user.id)
+        if (myEvaluation) {
+          setScore(myEvaluation.score.toString())
+          setComment(myEvaluation.comment || '')
         }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : '제출물 조회 실패'
@@ -55,7 +58,7 @@ export default function ReviewerEvaluate() {
     }
 
     fetchData()
-  }, [id, toast])
+  }, [id, user, toast])
 
   // 평가 제출
   const handleSubmitEvaluation = async (e: React.FormEvent) => {
@@ -75,7 +78,8 @@ export default function ReviewerEvaluate() {
     }
 
     // 확인 대화상자
-    const isUpdate = !!submission.evaluation
+    const myEvaluation = submission.evaluations?.find(ev => ev.reviewerId === user?.id)
+    const isUpdate = !!myEvaluation
     const confirmMessage = isUpdate
       ? '평가를 수정하시겠습니까?'
       : '평가를 제출하시겠습니까?'
@@ -89,15 +93,23 @@ export default function ReviewerEvaluate() {
         comment: comment.trim() || undefined,
       })
 
-      // 제출물 상태 업데이트
-      setSubmission(prev =>
-        prev
-          ? {
-              ...prev,
-              evaluation,
-            }
-          : null
-      )
+      // 제출물 상태 업데이트 (평가 목록에 추가/업데이트)
+      setSubmission(prev => {
+        if (!prev) return null
+
+        const evaluations = prev.evaluations || []
+        const existingIndex = evaluations.findIndex(ev => ev.reviewerId === user?.id)
+
+        if (existingIndex >= 0) {
+          // 기존 평가 업데이트
+          const updated = [...evaluations]
+          updated[existingIndex] = evaluation
+          return { ...prev, evaluations: updated }
+        } else {
+          // 새 평가 추가
+          return { ...prev, evaluations: [...evaluations, evaluation] }
+        }
+      })
 
       toast({
         title: isUpdate ? '평가가 수정되었습니다' : '평가가 제출되었습니다',
@@ -173,14 +185,56 @@ export default function ReviewerEvaluate() {
         <p className="text-muted-foreground">학생의 실습 제출물을 평가합니다.</p>
       </div>
 
-      {/* 기존 평가 알림 */}
-      {submission.evaluation && (
-        <Alert className="mb-6 border-green-500 bg-green-50 dark:bg-green-950/20">
-          <CheckCircle2 className="w-4 h-4 text-green-600" />
-          <AlertDescription className="text-green-800 dark:text-green-200">
-            이미 평가된 제출물입니다. 점수와 코멘트를 수정하여 재평가할 수 있습니다.
-          </AlertDescription>
-        </Alert>
+      {/* 다른 평가자들의 평가 */}
+      {submission.evaluations && submission.evaluations.length > 0 && (
+        <Card className="mb-6 border-blue-500">
+          <CardHeader>
+            <CardTitle className="text-blue-600">
+              다른 평가자들의 평가 ({submission.evaluations.length}명)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {submission.evaluations.map((ev, index) => {
+                const isMyEvaluation = ev.reviewerId === user?.id
+                return (
+                  <div
+                    key={ev.id}
+                    className={`p-4 rounded-lg border ${
+                      isMyEvaluation ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-300' : 'bg-muted'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">
+                        평가자 {index + 1}: {ev.reviewer?.name || ev.reviewer?.email || '알 수 없음'}
+                        {isMyEvaluation && ' (본인)'}
+                      </span>
+                      <span className="text-xl font-bold text-green-600">{ev.score}점</span>
+                    </div>
+                    {ev.comment && (
+                      <div className="mt-2 pt-2 border-t">
+                        <p className="text-sm font-semibold mb-1">코멘트</p>
+                        <p className="text-sm text-muted-foreground">{ev.comment}</p>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+              <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-300">
+                <span className="text-lg font-semibold text-green-800 dark:text-green-200">
+                  평균 점수
+                </span>
+                <span className="text-2xl font-bold text-green-600">
+                  {(
+                    submission.evaluations.reduce((sum, ev) => sum + ev.score, 0) /
+                    submission.evaluations.length
+                  ).toFixed(1)}
+                  점
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* 제출물 정보 */}
@@ -298,12 +352,12 @@ export default function ReviewerEvaluate() {
                 {isSubmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    {submission.evaluation ? '수정 중...' : '제출 중...'}
+                    {submission.evaluations?.find(ev => ev.reviewerId === user?.id) ? '수정 중...' : '제출 중...'}
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4 mr-2" />
-                    {submission.evaluation ? '평가 수정' : '평가 제출'}
+                    {submission.evaluations?.find(ev => ev.reviewerId === user?.id) ? '내 평가 수정' : '평가 제출'}
                   </>
                 )}
               </Button>
