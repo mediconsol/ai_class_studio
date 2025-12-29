@@ -9,6 +9,8 @@ import Session from "./pages/Session";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentPractice from "./pages/student/StudentPractice";
+import ReviewerDashboard from "./pages/reviewer/ReviewerDashboard";
+import ReviewerEvaluate from "./pages/reviewer/ReviewerEvaluate";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
@@ -64,6 +66,22 @@ function AppRoutes() {
             element={
               <ProtectedRoute allowedRoles={['student']}>
                 <StudentPractice />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reviewer"
+            element={
+              <ProtectedRoute allowedRoles={['reviewer']}>
+                <ReviewerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reviewer/evaluate/:id"
+            element={
+              <ProtectedRoute allowedRoles={['reviewer']}>
+                <ReviewerEvaluate />
               </ProtectedRoute>
             }
           />

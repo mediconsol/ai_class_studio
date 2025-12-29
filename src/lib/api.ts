@@ -33,6 +33,7 @@ interface Submission {
   createdAt: string
   updatedAt: string
   evaluation?: Evaluation
+  user?: User // 평가자가 조회할 때 포함됨
 }
 
 interface Evaluation {
@@ -131,6 +132,13 @@ export const submissionApi = {
    */
   async getById(id: string): Promise<{ submission: Submission }> {
     return apiRequest<{ submission: Submission }>(`/api/submissions/${id}`)
+  },
+
+  /**
+   * 모든 제출물 조회 (평가자 전용)
+   */
+  async getAllForReviewer(): Promise<{ submissions: Submission[] }> {
+    return apiRequest<{ submissions: Submission[] }>('/api/reviewer/submissions')
   },
 }
 
