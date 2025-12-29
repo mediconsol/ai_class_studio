@@ -12,7 +12,9 @@
 2. 기존 프로젝트 선택 (PostgreSQL이 있는 프로젝트)
 3. "New" → "GitHub Repo" 클릭
 4. `mediconsol/ai_class_studio` 저장소 선택
-5. Root Directory: `/backend` 설정 (중요!)
+5. 배포 시작 (잠시 대기)
+6. **Settings** → **Root Directory**: `backend` 입력 (슬래시 없이!)
+7. 저장 후 자동 재배포 확인
 
 ### 2.2 환경변수 설정
 Railway 프로젝트의 백엔드 서비스에서 다음 환경변수를 설정:
@@ -35,26 +37,32 @@ PORT=3000
 ```
 
 ### 2.3 빌드 및 배포 설정
-Railway는 `railway.json` 파일을 자동으로 감지합니다:
+Railway는 `nixpacks.toml` 파일을 자동으로 감지합니다:
 
-```json
-{
-  "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "npm install && npm run prisma:generate && npm run build"
-  },
-  "deploy": {
-    "startCommand": "npm run prisma:migrate && npm start",
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
-  }
-}
+```toml
+[phases.setup]
+nixPkgs = ["nodejs-20_x"]
+
+[phases.install]
+cmds = [
+  "npm ci",
+  "npm run prisma:generate"
+]
+
+[phases.build]
+cmds = [
+  "npm run build"
+]
+
+[start]
+cmd = "npm run prisma:migrate && npm start"
 ```
 
 **주요 설정:**
-- 빌드: npm install → Prisma Client 생성 → TypeScript 컴파일
-- 배포: Prisma 마이그레이션 실행 → 서버 시작
-- 재시작 정책: 실패 시 최대 10회 재시작
+- Setup: Node.js 20.x 사용
+- Install: npm ci로 의존성 설치 → Prisma Client 생성
+- Build: TypeScript 컴파일
+- Start: Prisma 마이그레이션 실행 → 서버 시작
 
 ## 3. 배포 프로세스
 

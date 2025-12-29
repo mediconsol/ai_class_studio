@@ -9,12 +9,15 @@
 3. `mediconsol/ai_class_studio` 저장소 선택
 4. 배포 시작 (잠시 대기)
 
-### Step 2: Root Directory 설정
+### Step 2: Root Directory 설정 (매우 중요!)
 
 1. 새로 생성된 **백엔드 서비스** 클릭
 2. **Settings** 탭
-3. **"Root Directory"** 찾기
-4. `/backend` 입력 후 저장
+3. **"Root Directory"** 섹션 찾기
+4. 입력란에 `backend` 입력 (슬래시 없이!)
+5. 저장 후 자동 재배포 확인
+
+**주의:** `/backend`가 아닌 `backend`로 입력하세요!
 
 ### Step 3: 환경변수 설정 (가장 중요!)
 
@@ -43,6 +46,19 @@
 - ✅ Building...
 - ✅ Deploying...
 - ✅ Success!
+
+---
+
+## 🔧 빌드 설정
+
+백엔드 디렉토리에 `nixpacks.toml` 파일이 있습니다:
+- ✅ Node.js 20 사용
+- ✅ npm ci로 의존성 설치
+- ✅ Prisma Client 생성
+- ✅ TypeScript 빌드
+- ✅ 배포 시 Prisma 마이그레이션 자동 실행
+
+Railway가 이 파일을 자동으로 감지하여 올바르게 빌드합니다.
 
 ---
 
