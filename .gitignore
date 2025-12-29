@@ -21,6 +21,16 @@ dist
 dist-ssr
 *.local
 
+# Backend specific (Railway 배포)
+backend/node_modules
+backend/dist
+backend/.env
+backend/.env.local
+
+# Prisma
+backend/prisma/migrations/*
+!backend/prisma/migrations/.gitkeep
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
