@@ -1,5 +1,22 @@
 import { Request, Response } from 'express'
 
+// API 응답 타입 정의
+interface APIErrorResponse {
+  error?: { message?: string }
+}
+
+interface GeminiResponse {
+  candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>
+}
+
+interface OpenAIResponse {
+  choices?: Array<{ message?: { content?: string } }>
+}
+
+interface AnthropicResponse {
+  content?: Array<{ text?: string }>
+}
+
 // AI 모델 타입 정의
 type AIProvider = 'google' | 'openai' | 'anthropic'
 
@@ -65,11 +82,11 @@ async function callGemini(
   )
 
   if (!response.ok) {
-    const error = await response.json()
+    const error = (await response.json()) as APIErrorResponse
     throw new Error(error.error?.message || 'Gemini API 호출 실패')
   }
 
-  const data = await response.json()
+  const data = (await response.json()) as GeminiResponse
   return data.candidates?.[0]?.content?.parts?.[0]?.text || '응답을 생성할 수 없습니다.'
 }
 
@@ -102,11 +119,11 @@ async function callOpenAI(
   })
 
   if (!response.ok) {
-    const error = await response.json()
+    const error = (await response.json()) as APIErrorResponse
     throw new Error(error.error?.message || 'OpenAI API 호출 실패')
   }
 
-  const data = await response.json()
+  const data = (await response.json()) as OpenAIResponse
   return data.choices?.[0]?.message?.content || '응답을 생성할 수 없습니다.'
 }
 
@@ -138,11 +155,11 @@ async function callAnthropic(
   })
 
   if (!response.ok) {
-    const error = await response.json()
+    const error = (await response.json()) as APIErrorResponse
     throw new Error(error.error?.message || 'Anthropic API 호출 실패')
   }
 
-  const data = await response.json()
+  const data = (await response.json()) as AnthropicResponse
   return data.content?.[0]?.text || '응답을 생성할 수 없습니다.'
 }
 
