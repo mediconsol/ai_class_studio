@@ -164,47 +164,53 @@ async function callGemini(
   return data.candidates?.[0]?.content?.parts?.[0]?.text || '응답을 생성할 수 없습니다.';
 }
 
-// OpenAI API 호출
+// 백엔드 프록시를 통한 AI API 호출
+async function callBackendProxy(
+  modelId: string,
+  systemPrompt: string,
+  userPrompt: string,
+  options: Required<AIGenerationOptions>
+): Promise<string> {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+  const response = await fetch(`${apiUrl}/api/ai/chat`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      modelId,
+      systemPrompt,
+      userPrompt,
+      options: {
+        temperature: options.temperature,
+        topP: options.topP,
+        maxTokens: options.maxTokens,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'AI API 호출 실패');
+  }
+
+  const data = await response.json();
+  return data.response || '응답을 생성할 수 없습니다.';
+}
+
+// OpenAI API 호출 (백엔드 프록시 사용 - CORS 문제 해결)
 async function callOpenAI(
   modelId: string,
   systemPrompt: string,
   userPrompt: string,
   options: Required<AIGenerationOptions>
 ): Promise<string> {
-  const apiKey = getApiKey('openai');
-  if (!apiKey) throw new Error('OpenAI API 키가 설정되지 않았습니다.');
+  // OpenAI는 브라우저 직접 호출이 불가능하므로 백엔드 프록시 사용
+  const model = AI_MODELS.find(m => m.modelId === modelId);
+  if (!model) throw new Error('알 수 없는 모델입니다.');
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: modelId,
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
-      temperature: options.temperature,
-      top_p: options.topP,
-      max_tokens: options.maxTokens,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error?.message || 'OpenAI API 호출 실패');
-  }
-
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content || '응답을 생성할 수 없습니다.';
+  return callBackendProxy(model.id, systemPrompt, userPrompt, options);
 }
 
 // Anthropic Claude API 호출

@@ -5,6 +5,7 @@ import { prisma } from './utils/prisma'
 import authRoutes from './routes/auth.routes'
 import submissionRoutes from './routes/submission.routes'
 import evaluationRoutes from './routes/evaluation.routes'
+import aiRoutes from './routes/ai.routes'
 import { notFoundHandler, errorHandler } from './middleware/error.middleware'
 
 // 환경변수 로드
@@ -47,6 +48,7 @@ app.get('/health', (_req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/submissions', submissionRoutes)
 app.use('/api/evaluations', evaluationRoutes)
+app.use('/api/ai', aiRoutes)
 
 // 404 핸들러
 app.use(notFoundHandler)
