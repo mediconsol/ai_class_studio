@@ -258,6 +258,7 @@ export interface Resource {
   type: ResourceType;
   url?: string;
   tags: string[];
+  content?: string;  // 펼쳐서 보여줄 내용 (복사 가능)
 }
 
 // ============================================
