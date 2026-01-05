@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, Eye, EyeOff, List, ChevronDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, Eye, List, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Slide } from "@/data/types";
 
@@ -8,21 +8,19 @@ interface SlideViewerProps {
 
 const SlideViewer = ({ slides }: SlideViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showScript, setShowScript] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isTocCollapsed, setIsTocCollapsed] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 2-column 모드: 현재 인덱스와 다음 슬라이드
-  const leftSlide = slides[currentIndex];
-  const rightSlide = slides[currentIndex + 1];
+  // 1-slide 모드: 현재 슬라이드만
+  const currentSlide = slides[currentIndex];
 
   const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => Math.max(0, prev - 2));
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
   }, []);
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(slides.length - 1, prev + 2));
+    setCurrentIndex((prev) => Math.min(slides.length - 1, prev + 1));
   }, [slides.length]);
 
   const toggleFullscreen = useCallback(async () => {
@@ -57,11 +55,6 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
           e.preventDefault();
           toggleFullscreen();
           break;
-        case 's':
-        case 'S':
-          e.preventDefault();
-          setShowScript((prev) => !prev);
-          break;
         case 'Escape':
           if (isFullscreen) {
             setIsFullscreen(false);
@@ -83,7 +76,7 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  if (!leftSlide) {
+  if (!currentSlide) {
     return (
       <div className="flex items-center justify-center h-64 text-muted-foreground">
         슬라이드가 없습니다.
@@ -115,115 +108,6 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
   }, {} as Record<string, (Slide & { index: number })[]>);
 
   const phaseOrder = ['intro', 'understand', 'practice', 'summary'];
-
-  // 슬라이드 카드 렌더링 함수
-  const renderSlideCard = (slide: Slide | undefined) => {
-    if (!slide) {
-      return (
-        <div className="flex-1 rounded-xl border-2 border-dashed border-border bg-muted/30 flex items-center justify-center min-h-[400px]">
-          <span className="text-muted-foreground text-sm">슬라이드 없음</span>
-        </div>
-      );
-    }
-
-    const contentItems = Array.isArray(slide.screenContent)
-      ? slide.screenContent
-      : [slide.screenContent];
-
-    return (
-      <div className="flex-1 bg-gradient-to-br from-card to-secondary/20 rounded-xl border border-border p-8 flex flex-col min-h-[400px]">
-        {/* Slide Header */}
-        <div className="flex items-center gap-2 mb-6">
-          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${phaseColors[slide.phase]}`}>
-            {phaseLabels[slide.phase]}
-          </span>
-          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-            {slide.id}
-          </span>
-        </div>
-
-        {/* Slide Content */}
-        <div className="flex-1 flex flex-col">
-          <h2 className="font-display font-bold text-foreground mb-4 leading-tight text-3xl">
-            {slide.title}
-          </h2>
-
-          {contentItems.length === 1 ? (
-            <p className="text-muted-foreground whitespace-pre-line text-lg leading-relaxed">
-              {contentItems[0]}
-            </p>
-          ) : (
-            <ul className="space-y-3">
-              {contentItems.map((item, index) => {
-                // 블릿을 표시하지 않을 항목: 빈 줄, 제목(■), 대괄호 시작, 이미 기호가 있는 항목, 숫자로 시작
-                const noBullet = !item.trim() ||
-                                 item.startsWith('■') ||
-                                 item.startsWith('[') ||
-                                 item.startsWith('•') ||
-                                 item.startsWith('→') ||
-                                 item.startsWith('□') ||
-                                 item.startsWith('✓') ||
-                                 item.startsWith('❌') ||
-                                 item.startsWith('⭕') ||
-                                 item.startsWith('✅') ||
-                                 item.startsWith('①') ||
-                                 item.startsWith('②') ||
-                                 item.startsWith('③') ||
-                                 item.startsWith('④') ||
-                                 item.startsWith('⑤') ||
-                                 item.startsWith('⑥') ||
-                                 item.startsWith('⑦') ||
-                                 item.startsWith('⑧') ||
-                                 item.startsWith('⑨') ||
-                                 item.startsWith('⑩') ||
-                                 /^\d+\./.test(item); // 숫자와 점으로 시작 (1., 2., 3. 등)
-
-                return (
-                  <li
-                    key={index}
-                    className={`flex items-start gap-2.5 text-foreground text-lg ${
-                      noBullet ? '' : ''
-                    }`}
-                  >
-                    {!noBullet && (
-                      <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-primary" />
-                    )}
-                    <span className={`leading-relaxed ${
-                      item.startsWith('■') ? 'font-semibold' : ''
-                    }`}>
-                      {item}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-
-          {/* Code Block */}
-          {slide.codeBlock && (
-            <div className="mt-4 p-3 bg-slate-900 rounded-lg overflow-auto max-h-80">
-              <pre className="text-slate-100 text-xs font-mono whitespace-pre leading-relaxed">
-                {slide.codeBlock.content}
-              </pre>
-            </div>
-          )}
-        </div>
-
-        {/* Script indicator */}
-        {slide.script && showScript && (
-          <div className="mt-4 pt-3 border-t border-border">
-            <p className="text-xs font-medium text-amber-700 mb-1 flex items-center gap-1">
-              <Eye className="w-3 h-3" />
-              강사 멘트
-            </p>
-            <p className="text-xs text-amber-900 whitespace-pre-line leading-relaxed">
-              {slide.script}
-            </p>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <div
@@ -275,7 +159,7 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
                               key={slide.id}
                               onClick={() => setCurrentIndex(slide.index)}
                               className={`w-full text-left px-2 py-1.5 rounded text-xs transition-colors flex items-start gap-1 ${
-                                currentIndex === slide.index || currentIndex + 1 === slide.index
+                                currentIndex === slide.index
                                   ? 'bg-primary/10 text-primary font-medium'
                                   : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                               }`}
@@ -294,10 +178,104 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
           </div>
         )}
 
-        {/* 2-Column Slide Display */}
+        {/* Script + PPT Split Display */}
         <div className="flex-1 flex gap-4">
-          {renderSlideCard(leftSlide)}
-          {renderSlideCard(rightSlide)}
+          {/* LEFT: Full Script */}
+          <div className="flex-1 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-8 flex flex-col min-h-[400px] overflow-auto">
+            <div className="flex items-center gap-2 mb-4">
+              <Eye className="w-5 h-5 text-amber-700 dark:text-amber-400" />
+              <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100">강사 스크립트</h3>
+            </div>
+            {currentSlide.script ? (
+              <div className="flex-1 text-amber-900 dark:text-amber-100 whitespace-pre-line leading-relaxed text-base">
+                {currentSlide.script}
+              </div>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-amber-600 dark:text-amber-400 text-sm">
+                스크립트가 없습니다.
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT: PPT Content */}
+          <div className="flex-1 bg-gradient-to-br from-card to-secondary/20 rounded-xl border border-border p-8 flex flex-col min-h-[400px]">
+            {/* Slide Header */}
+            <div className="flex items-center gap-2 mb-6">
+              <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${phaseColors[currentSlide.phase]}`}>
+                {phaseLabels[currentSlide.phase]}
+              </span>
+              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                {currentSlide.id}
+              </span>
+            </div>
+
+            {/* Slide Content */}
+            <div className="flex-1 flex flex-col">
+              <h2 className="font-display font-bold text-foreground mb-4 leading-tight text-3xl">
+                {currentSlide.title}
+              </h2>
+
+              {Array.isArray(currentSlide.screenContent) ? (
+                <ul className="space-y-3">
+                  {currentSlide.screenContent.map((item, index) => {
+                    // 블릿을 표시하지 않을 항목: 빈 줄, 제목(■), 대괄호 시작, 이미 기호가 있는 항목, 숫자로 시작
+                    const noBullet = !item.trim() ||
+                                     item.startsWith('■') ||
+                                     item.startsWith('[') ||
+                                     item.startsWith('•') ||
+                                     item.startsWith('→') ||
+                                     item.startsWith('□') ||
+                                     item.startsWith('✓') ||
+                                     item.startsWith('❌') ||
+                                     item.startsWith('⭕') ||
+                                     item.startsWith('✅') ||
+                                     item.startsWith('①') ||
+                                     item.startsWith('②') ||
+                                     item.startsWith('③') ||
+                                     item.startsWith('④') ||
+                                     item.startsWith('⑤') ||
+                                     item.startsWith('⑥') ||
+                                     item.startsWith('⑦') ||
+                                     item.startsWith('⑧') ||
+                                     item.startsWith('⑨') ||
+                                     item.startsWith('⑩') ||
+                                     /^\d+\./.test(item); // 숫자와 점으로 시작 (1., 2., 3. 등)
+
+                    return (
+                      <li
+                        key={index}
+                        className={`flex items-start gap-2.5 text-foreground text-lg ${
+                          noBullet ? '' : ''
+                        }`}
+                      >
+                        {!noBullet && (
+                          <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-primary" />
+                        )}
+                        <span className={`leading-relaxed ${
+                          item.startsWith('■') ? 'font-semibold' : ''
+                        }`}>
+                          {item}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className="text-muted-foreground whitespace-pre-line text-lg leading-relaxed">
+                  {currentSlide.screenContent}
+                </p>
+              )}
+
+              {/* Code Block */}
+              {currentSlide.codeBlock && (
+                <div className="mt-4 p-3 bg-slate-900 rounded-lg overflow-auto max-h-80">
+                  <pre className="text-slate-100 text-xs font-mono whitespace-pre leading-relaxed">
+                    {currentSlide.codeBlock.content}
+                  </pre>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Fullscreen toggle (right side) */}
@@ -332,10 +310,9 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
           이전
         </button>
 
-        {/* Slide indicators (pair-based) */}
+        {/* Slide indicators */}
         <div className="flex items-center gap-2">
           {slides.map((_, index) => {
-            if (index % 2 !== 0) return null; // 짝수 인덱스만 표시
             const isActive = currentIndex === index;
             return (
               <button
@@ -354,19 +331,6 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
         </div>
 
         <div className="flex items-center gap-2">
-          {(leftSlide?.script || rightSlide?.script) && (
-            <button
-              onClick={() => setShowScript(!showScript)}
-              className={`p-2.5 rounded-lg transition-colors ${
-                showScript
-                  ? 'bg-amber-100 text-amber-700'
-                  : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
-              }`}
-              title={showScript ? '강사 멘트 숨기기 (S)' : '강사 멘트 보기 (S)'}
-            >
-              {showScript ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          )}
           {isFullscreen && (
             <button
               onClick={toggleFullscreen}
@@ -397,7 +361,7 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
       {/* Keyboard shortcuts hint (shown in fullscreen) */}
       {isFullscreen && (
         <div className="fixed bottom-4 left-4 text-xs text-muted-foreground bg-background/80 px-3 py-2 rounded-lg backdrop-blur-sm">
-          <span className="font-medium">단축키:</span> ← → 이동 (2개씩) | Space 다음 | S 멘트 | F 전체화면 | ESC 종료
+          <span className="font-medium">단축키:</span> ← → 이동 | Space 다음 | F 전체화면 | ESC 종료
         </div>
       )}
     </div>
