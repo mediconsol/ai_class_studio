@@ -37,9 +37,9 @@ const AI_MODELS: AIModel[] = [
   { id: 'o1-mini', provider: 'openai', modelId: 'o1-mini' },
   { id: 'o1', provider: 'openai', modelId: 'o1' },
   // Anthropic Claude
-  { id: 'claude-haiku', provider: 'anthropic', modelId: 'claude-3-5-haiku-latest' },
-  { id: 'claude-sonnet', provider: 'anthropic', modelId: 'claude-3-5-sonnet-latest' },
-  { id: 'claude-opus', provider: 'anthropic', modelId: 'claude-opus-4-latest' },
+  { id: 'claude-haiku', provider: 'anthropic', modelId: 'claude-3-5-haiku-20241022' },
+  { id: 'claude-sonnet', provider: 'anthropic', modelId: 'claude-3-5-sonnet-20241022' },
+  { id: 'claude-opus', provider: 'anthropic', modelId: 'claude-opus-4-20250514' },
 ]
 
 // API 키 가져오기
