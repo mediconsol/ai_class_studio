@@ -39,6 +39,12 @@ async function main() {
         name: '테스트학생2',
       },
       {
+        email: 'student3@test.com',
+        passwordHash: hashedPassword,
+        role: 'student',
+        name: '실습용학생',
+      },
+      {
         email: 'reviewer1@test.com',
         passwordHash: hashedPassword,
         role: 'reviewer',

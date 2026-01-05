@@ -275,6 +275,20 @@ export default function Login() {
                   </button>
 
                   <button
+                    onClick={() => handleQuickLogin('student3@test.com')}
+                    disabled={isLoading}
+                    className="w-full px-4 py-2.5 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/20 dark:border-blue-800 dark:hover:bg-blue-950/30 transition-colors text-left disabled:opacity-50"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">학생3 (실습용학생)</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400">student3@test.com</p>
+                      </div>
+                      <span className="text-xs px-2 py-1 rounded bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200">학생</span>
+                    </div>
+                  </button>
+
+                  <button
                     onClick={() => handleQuickLogin('reviewer1@test.com')}
                     disabled={isLoading}
                     className="w-full px-4 py-2.5 rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/20 dark:border-purple-800 dark:hover:bg-purple-950/30 transition-colors text-left disabled:opacity-50"
