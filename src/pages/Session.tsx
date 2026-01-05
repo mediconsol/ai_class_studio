@@ -142,7 +142,7 @@ const Session = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="min-h-[calc(100vh-180px)]">
+          <div className="min-h-[calc(100vh-260px)]">
             {renderContent()}
           </div>
         </div>

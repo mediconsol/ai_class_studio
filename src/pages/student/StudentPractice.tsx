@@ -328,7 +328,7 @@ export default function StudentPractice() {
         )}
 
         {/* AI Panel */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-2 gap-6 mb-6 h-[calc(100vh-280px)]">
           {/* Left Panel - Input */}
           <div className="ai-panel flex flex-col p-6">
             <div className="flex items-center gap-3 mb-6">

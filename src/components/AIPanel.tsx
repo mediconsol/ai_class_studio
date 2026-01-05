@@ -142,7 +142,7 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
   // Practice mode: 3-column layout
   if (isPracticeMode) {
     return (
-      <div className="flex gap-4 h-[calc(100vh-120px)] animate-fade-in">
+      <div className="flex gap-4 h-[calc(100vh-280px)] animate-fade-in">
         {/* Left Panel - Dummy Data Only */}
         {dummyData && dummyData.length > 0 && (
           <div className="w-[280px] flex-shrink-0">
@@ -157,19 +157,20 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
         )}
 
         {/* Middle Panel - Input */}
-        <div className="flex-1 ai-panel flex flex-col p-3 overflow-hidden">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+        <div className="flex-1 ai-panel flex flex-col p-5 overflow-hidden">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
               <MediConsolLogo size="sm" className="text-primary" />
             </div>
             <div>
               <h3 className="font-semibold text-foreground text-sm">프롬프트 입력</h3>
+              <p className="text-xs text-muted-foreground">AI에게 요청할 내용을 입력하세요</p>
             </div>
           </div>
 
           {/* Prompt Templates */}
           {promptTemplates.length > 0 && (
-            <div className="mb-2">
+            <div className="mb-3">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs font-medium text-muted-foreground">프롬프트 템플릿</p>
               </div>
@@ -194,7 +195,7 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
 
           {/* Selected Dummy Data Indicator */}
           {selectedDummyData && (
-            <div className="mb-2 flex items-center justify-between p-2 rounded-lg bg-accent/15 border-2 border-accent/50 shadow-sm">
+            <div className="mb-3 flex items-center justify-between p-2.5 rounded-lg bg-accent/15 border-2 border-accent/50 shadow-sm">
               <div className="flex items-center gap-2">
                 <span className="flex items-center justify-center w-5 h-5 rounded-full bg-accent text-white text-[10px] font-bold">✓</span>
                 <span className="text-sm text-accent font-semibold">
@@ -225,7 +226,7 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
           </div>
 
           {/* Model Selector & Action Buttons */}
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 mt-3">
             {/* Model Selector */}
             <div className="relative">
               <button
@@ -303,14 +304,15 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
         </div>
 
         {/* Right Panel - Output */}
-        <div className="flex-1 ai-panel flex flex-col p-3 overflow-hidden">
-          <div className="flex items-center justify-between mb-2 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent/10">
+        <div className="flex-1 ai-panel flex flex-col p-5 overflow-hidden">
+          <div className="flex items-center justify-between mb-4 flex-shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-accent/10">
                 <MediConsolLogo size="sm" className="text-accent" />
               </div>
               <div>
                 <h3 className="font-semibold text-foreground text-sm">AI 응답</h3>
+                <p className="text-xs text-muted-foreground">생성된 결과</p>
               </div>
             </div>
             {response && (
@@ -430,21 +432,22 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
 
   // Default mode: 2-column layout (original)
   return (
-    <div className="grid grid-cols-2 gap-6 h-[calc(100vh-120px)] animate-fade-in">
+    <div className="grid grid-cols-2 gap-6 h-[calc(100vh-280px)] animate-fade-in">
       {/* Left Panel - Input */}
-      <div className="ai-panel flex flex-col p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-            <MediConsolLogo size="sm" className="text-primary" />
+      <div className="ai-panel flex flex-col p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
+            <MediConsolLogo size="md" className="text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground text-sm">프롬프트 입력</h3>
+            <h3 className="font-semibold text-foreground">프롬프트 입력</h3>
+            <p className="text-sm text-muted-foreground">AI에게 요청할 내용을 입력하세요</p>
           </div>
         </div>
 
         {/* Prompt Templates */}
         {promptTemplates.length > 0 && (
-          <div className="mb-2">
+          <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-medium text-muted-foreground">프롬프트 템플릿</p>
             </div>
@@ -480,7 +483,7 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
         </div>
 
         {/* Model Selector & Action Buttons */}
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex items-center gap-3 mt-4">
           {/* Model Selector */}
           <div className="relative">
             <button
@@ -558,14 +561,15 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
       </div>
 
       {/* Right Panel - Output */}
-      <div className="ai-panel flex flex-col p-3 overflow-hidden">
-        <div className="flex items-center justify-between mb-2 flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent/10">
-              <MediConsolLogo size="sm" className="text-accent" />
+      <div className="ai-panel flex flex-col p-6 overflow-hidden">
+        <div className="flex items-center justify-between mb-6 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10">
+              <MediConsolLogo size="md" className="text-accent" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground text-sm">AI 응답</h3>
+              <h3 className="font-semibold text-foreground">AI 응답 결과</h3>
+              <p className="text-sm text-muted-foreground">생성된 결과물이 여기에 표시됩니다</p>
             </div>
           </div>
           {response && (
