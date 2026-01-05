@@ -142,7 +142,7 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
   // Practice mode: 3-column layout
   if (isPracticeMode) {
     return (
-      <div className="flex gap-4 h-[calc(100vh-280px)] animate-fade-in">
+      <div className="flex gap-4 h-[calc(100vh-200px)] animate-fade-in">
         {/* Left Panel - Dummy Data Only */}
         {dummyData && dummyData.length > 0 && (
           <div className="w-[280px] flex-shrink-0">
@@ -432,7 +432,7 @@ const AIPanel = ({ promptTemplates, dummyData, exercises, practiceGuide, promptG
 
   // Default mode: 2-column layout (original)
   return (
-    <div className="grid grid-cols-2 gap-6 h-[calc(100vh-280px)] animate-fade-in">
+    <div className="grid grid-cols-2 gap-6 h-[calc(100vh-200px)] animate-fade-in">
       {/* Left Panel - Input */}
       <div className="ai-panel flex flex-col p-6">
         <div className="flex items-center gap-3 mb-6">
