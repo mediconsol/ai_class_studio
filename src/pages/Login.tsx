@@ -61,6 +61,31 @@ export default function Login() {
     }
   }
 
+  // 테스트 계정 빠른 로그인
+  const handleQuickLogin = async (testEmail: string) => {
+    setEmail(testEmail)
+    setPassword('test1234')
+    setStudentError('')
+    setIsLoading(true)
+
+    try {
+      const { user } = await login(testEmail, 'test1234')
+
+      // 역할별 리다이렉트
+      if (user.role === 'student') {
+        navigate('/student')
+      } else if (user.role === 'reviewer') {
+        navigate('/reviewer')
+      } else {
+        navigate('/')
+      }
+    } catch (err) {
+      setStudentError(err instanceof Error ? err.message : '로그인에 실패했습니다')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-6">
       <div className="w-full max-w-6xl">
@@ -216,6 +241,54 @@ export default function Login() {
                   {isLoading ? '로그인 중...' : '학생/평가자 로그인'}
                 </Button>
               </form>
+
+              {/* 테스트 계정 빠른 로그인 */}
+              <div className="mt-6 pt-6 border-t">
+                <p className="text-sm font-semibold text-muted-foreground mb-3">테스트 계정 (빠른 로그인)</p>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => handleQuickLogin('student1@test.com')}
+                    disabled={isLoading}
+                    className="w-full px-4 py-2.5 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/20 dark:border-blue-800 dark:hover:bg-blue-950/30 transition-colors text-left disabled:opacity-50"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">학생1 (테스트학생1)</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400">student1@test.com</p>
+                      </div>
+                      <span className="text-xs px-2 py-1 rounded bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200">학생</span>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleQuickLogin('student2@test.com')}
+                    disabled={isLoading}
+                    className="w-full px-4 py-2.5 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/20 dark:border-blue-800 dark:hover:bg-blue-950/30 transition-colors text-left disabled:opacity-50"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">학생2 (테스트학생2)</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400">student2@test.com</p>
+                      </div>
+                      <span className="text-xs px-2 py-1 rounded bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200">학생</span>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleQuickLogin('reviewer1@test.com')}
+                    disabled={isLoading}
+                    className="w-full px-4 py-2.5 rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/20 dark:border-purple-800 dark:hover:bg-purple-950/30 transition-colors text-left disabled:opacity-50"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-purple-900 dark:text-purple-100">평가자1 (테스트평가자1)</p>
+                        <p className="text-xs text-purple-600 dark:text-purple-400">reviewer1@test.com</p>
+                      </div>
+                      <span className="text-xs px-2 py-1 rounded bg-purple-200 dark:bg-purple-900 text-purple-800 dark:text-purple-200">평가자</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
