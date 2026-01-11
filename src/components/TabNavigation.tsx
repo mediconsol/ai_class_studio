@@ -1,7 +1,7 @@
-import { Presentation, Bot, FileText, ClipboardList, HelpCircle } from "lucide-react";
+import { Presentation, Bot, FileText, ClipboardList, HelpCircle, PlayCircle } from "lucide-react";
 import { SessionType } from "@/data/types";
 
-export type TabType = "slides" | "ai" | "quiz" | "resources" | "worksheet";
+export type TabType = "slides" | "ai" | "practice" | "quiz" | "resources" | "worksheet";
 
 interface TabConfig {
   id: TabType;
@@ -15,12 +15,14 @@ interface TabNavigationProps {
   sessionType?: SessionType;
   sessionId?: number;
   hasQuizzes?: boolean;
+  hasPracticeScenarios?: boolean;
 }
 
 const getTabsForSessionType = (
   sessionType: SessionType = "theory",
   sessionId?: number,
-  hasQuizzes?: boolean
+  hasQuizzes?: boolean,
+  hasPracticeScenarios?: boolean
 ): TabConfig[] => {
   const baseTabs: TabConfig[] = [
     { id: "slides", label: "슬라이드", icon: Presentation },
@@ -41,11 +43,15 @@ const getTabsForSessionType = (
       return theoryTabs;
 
     case "practice":
-      // 실습 (6~15차시): 슬라이드 / AI 실습 / 퀴즈 / 자료
+      // 실습 (6~15차시): 슬라이드 / 녹화실습 / AI 실습 / 퀴즈 / 자료
       const practiceTabs: TabConfig[] = [
         ...baseTabs,
-        { id: "ai", label: "AI 실습", icon: Bot },
       ];
+      // 녹화용 실습 시나리오가 있으면 녹화실습 탭 추가
+      if (hasPracticeScenarios) {
+        practiceTabs.push({ id: "practice", label: "녹화실습", icon: PlayCircle });
+      }
+      practiceTabs.push({ id: "ai", label: "AI 실습", icon: Bot });
       // 6~15차시에 퀴즈 탭 추가
       if (hasQuizzes || (sessionId && sessionId >= 6 && sessionId <= 15)) {
         practiceTabs.push({ id: "quiz", label: "퀴즈", icon: HelpCircle });
@@ -70,8 +76,8 @@ const getTabsForSessionType = (
   }
 };
 
-const TabNavigation = ({ activeTab, onTabChange, sessionType = "theory", sessionId, hasQuizzes }: TabNavigationProps) => {
-  const tabs = getTabsForSessionType(sessionType, sessionId, hasQuizzes);
+const TabNavigation = ({ activeTab, onTabChange, sessionType = "theory", sessionId, hasQuizzes, hasPracticeScenarios }: TabNavigationProps) => {
+  const tabs = getTabsForSessionType(sessionType, sessionId, hasQuizzes, hasPracticeScenarios);
 
   return (
     <nav className="flex items-center gap-2 p-1.5 bg-muted/50 rounded-xl border border-border/50">

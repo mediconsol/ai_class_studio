@@ -68,6 +68,12 @@ export interface PromptTemplate {
 
 export type DummyDataCategory = 'nursing' | 'admin' | 'patient' | 'document' | 'safety' | 'infection' | 'sop' | 'education';
 
+// 더미데이터 유형 (녹화용 실습)
+export type DummyDataType = 'memo' | 'voice' | 'chat' | 'flawed' | 'role_switch';
+
+// 역할 전환 대상
+export type RoleTarget = 'nurse' | 'doctor' | 'admin' | 'patient' | 'caregiver';
+
 export interface DummyData {
   id: string;
   title: string;
@@ -82,6 +88,56 @@ export interface DummyData {
 
   // "일부러 어설픈 데이터" 표시 (교육용)
   isRaw?: boolean;
+
+  // === 녹화용 실습 확장 필드 ===
+  // 더미데이터 유형
+  dataType?: DummyDataType;
+
+  // 역할 전환 대상 (role_switch 유형일 때)
+  roleTarget?: RoleTarget;
+
+  // 함정 포인트 (flawed 유형일 때)
+  trapPoints?: string[];
+
+  // 이 데이터의 특징 설명 (녹화 시 읽을 내용)
+  characteristics?: string;
+}
+
+// ============================================
+// 실습 시나리오 (Practice Scenario) - 녹화용 실습
+// ============================================
+
+// 프롬프트 유형
+export type PromptType = 'summary' | 'convert' | 'analyze' | 'validate' | 'generate' | 'compare';
+
+// 출력 형식
+export type OutputFormat = 'text' | 'table' | 'list' | 'sbar' | 'report' | 'checklist' | 'timeline';
+
+// 난이도
+export type DifficultyLevel = 'basic' | 'intermediate' | 'advanced';
+
+export interface PracticePrompt {
+  id: string;
+  title: string;
+  template: string;           // {{data}} 플레이스홀더 포함
+  description?: string;
+  expectedOutput: string;     // 예상 AI 응답 (녹화용)
+  outputExplanation: string;  // 결과 해설
+
+  // === 프롬프트 분류 확장 ===
+  promptType?: PromptType;      // 프롬프트 유형
+  outputFormat?: OutputFormat;  // 출력 형식
+  difficulty?: DifficultyLevel; // 난이도
+  tags?: string[];              // 추가 태그 (예: "인수인계", "보호자용")
+}
+
+export interface PracticeScenario {
+  id: number;
+  title: string;              // "시나리오 1: 메모형 데이터"
+  description: string;        // 시나리오 소개 (녹화 시 읽을 내용)
+  dummyDataList: DummyData[]; // 이 시나리오에서 사용할 더미데이터들
+  prompts: PracticePrompt[];  // 프롬프트 템플릿들
+  summary?: string;           // 시나리오 마무리 멘트
 }
 
 // ============================================
@@ -304,6 +360,7 @@ export interface Session extends SessionMeta {
   exercises?: Exercise[];
   practiceGuide?: PracticeGuide;
   promptGuide?: PromptGuide;  // 프롬프트 설계 가이드 (6-15차시)
+  practiceScenarios?: PracticeScenario[];  // 녹화용 실습 시나리오 (6-15차시)
 
   // 과제 차시 전용
   worksheets?: Worksheet[];

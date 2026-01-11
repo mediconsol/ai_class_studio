@@ -7,6 +7,7 @@ import { exercises } from './exercises';
 import { quizzes } from './quizzes';
 import { session06PracticeGuide } from './practiceGuide';
 import { promptGuide } from './promptGuide';
+import { practiceScenarios } from './practiceScenarios';
 
 export const session06: Session = {
   // 메타 정보
@@ -30,4 +31,5 @@ export const session06: Session = {
   practiceGuide: session06PracticeGuide,
   promptGuide,
   quizzes,
+  practiceScenarios,  // 녹화용 실습 시나리오
 };

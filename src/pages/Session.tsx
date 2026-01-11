@@ -4,6 +4,7 @@ import LectureHeader from "@/components/LectureHeader";
 import TabNavigation, { TabType } from "@/components/TabNavigation";
 import SlideViewer from "@/components/SlideViewer";
 import AIPanel from "@/components/AIPanel";
+import PracticePanel from "@/components/PracticePanel";
 import ResourcesPanel from "@/components/ResourcesPanel";
 import WorksheetPanel from "@/components/WorksheetPanel";
 import QuizPanel from "@/components/QuizPanel";
@@ -67,6 +68,22 @@ const Session = () => {
     switch (activeTab) {
       case "slides":
         return <SlideViewer slides={session.slides} />;
+
+      case "practice":
+        // 녹화용 실습 시나리오 패널
+        if (session.practiceScenarios && session.practiceScenarios.length > 0) {
+          return (
+            <PracticePanel
+              scenarios={session.practiceScenarios}
+              sessionTitle={`${session.id}강: ${session.title}`}
+            />
+          );
+        }
+        return (
+          <div className="text-center py-12 text-muted-foreground">
+            이 차시에는 녹화용 실습 시나리오가 없습니다.
+          </div>
+        );
 
       case "ai":
         // For practice sessions, pass dummyData, exercises, practiceGuide, and promptGuide
@@ -138,6 +155,7 @@ const Session = () => {
               sessionType={session.type}
               sessionId={session.id}
               hasQuizzes={!!(session.quizzes && session.quizzes.length > 0)}
+              hasPracticeScenarios={!!(session.practiceScenarios && session.practiceScenarios.length > 0)}
             />
           </div>
 
