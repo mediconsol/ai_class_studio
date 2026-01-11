@@ -257,7 +257,7 @@ const PracticePanel = ({ scenarios, sessionTitle }: PracticePanelProps) => {
                 )}
 
                 {/* 데이터 내용 */}
-                <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 mb-3 max-h-48 overflow-auto">
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 mb-3 max-h-[400px] overflow-auto">
                   <pre className="text-sm whitespace-pre-wrap font-mono text-slate-800 dark:text-slate-200">
                     {currentData.content}
                   </pre>

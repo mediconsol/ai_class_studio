@@ -7,6 +7,7 @@ import { exercises } from './exercises';
 import { quizzes } from './quizzes';
 import { session14PracticeGuide } from './practiceGuide';
 import { promptGuide } from './promptGuide';
+import { practiceScenarios } from './practiceScenarios';
 
 export const session14: Session = {
   id: 14,
@@ -25,4 +26,5 @@ export const session14: Session = {
   practiceGuide: session14PracticeGuide,
   promptGuide,
   quizzes,
+  practiceScenarios,
 };
