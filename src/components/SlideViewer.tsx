@@ -130,7 +130,7 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
                 <List className="w-5 h-5 text-muted-foreground" />
               </button>
             ) : (
-              <div className="p-4 overflow-auto max-h-[60vh]">
+              <div className="p-4">
                 <div className="flex items-center justify-between mb-4 pb-2 border-b border-border">
                   <div className="flex items-center gap-2">
                     <List className="w-4 h-4 text-primary" />
