@@ -112,14 +112,80 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col gap-6 animate-fade-in ${isFullscreen ? 'bg-background p-6 h-screen' : ''}`}
+      className={`flex flex-col gap-2 animate-fade-in ${isFullscreen ? 'bg-background p-6 h-screen' : ''}`}
     >
+      {/* Navigation Controls - 상단 배치 */}
+      <div className="flex items-center justify-between mb-2">
+        <button
+          onClick={goToPrevious}
+          disabled={currentIndex === 0}
+          className={`
+            flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
+            transition-all duration-200
+            ${currentIndex === 0
+              ? "bg-muted text-muted-foreground cursor-not-allowed"
+              : "bg-card text-foreground hover:bg-secondary border border-border shadow-card"
+            }
+          `}
+        >
+          <ChevronLeft className="w-4 h-4" />
+          이전
+        </button>
+
+        {/* Slide indicators */}
+        <div className="flex items-center gap-1.5">
+          {slides.map((_, index) => {
+            const isActive = currentIndex === index;
+            return (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className={`
+                  h-2 rounded-full transition-all duration-200
+                  ${isActive
+                    ? "bg-primary w-6"
+                    : "bg-border hover:bg-muted-foreground w-2"
+                  }
+                `}
+              />
+            );
+          })}
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isFullscreen && (
+            <button
+              onClick={toggleFullscreen}
+              className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+              title="전체화면 종료 (F / ESC)"
+            >
+              <Minimize2 className="w-4 h-4" />
+            </button>
+          )}
+          <button
+            onClick={goToNext}
+            disabled={currentIndex >= slides.length - 1}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
+              transition-all duration-200
+              ${currentIndex >= slides.length - 1
+                ? "bg-muted text-muted-foreground cursor-not-allowed"
+                : "bg-primary text-primary-foreground hover:opacity-90 shadow-soft"
+              }
+            `}
+          >
+            다음
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
       {/* Main Content Area */}
       <div className={`flex gap-4 ${isFullscreen ? 'flex-1' : ''}`}>
         {/* TOC Panel - Collapsible */}
         {!isFullscreen && (
           <div className={`flex-shrink-0 bg-card rounded-xl border border-border overflow-hidden transition-all duration-300 ${
-            isTocCollapsed ? 'w-12' : 'w-64'
+            isTocCollapsed ? 'w-12' : 'w-48'
           }`}>
             {isTocCollapsed ? (
               <button
@@ -178,27 +244,10 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
           </div>
         )}
 
-        {/* Script + PPT Split Display */}
+        {/* PPT + Script Split Display */}
         <div className="flex-1 flex gap-4">
-          {/* LEFT: Full Script */}
-          <div className="flex-1 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-8 flex flex-col min-h-[400px] overflow-auto">
-            <div className="flex items-center gap-2 mb-4">
-              <Eye className="w-5 h-5 text-amber-700 dark:text-amber-400" />
-              <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100">강사 스크립트</h3>
-            </div>
-            {currentSlide.script ? (
-              <div className="flex-1 text-amber-900 dark:text-amber-100 whitespace-pre-line leading-relaxed text-base">
-                {currentSlide.script}
-              </div>
-            ) : (
-              <div className="flex-1 flex items-center justify-center text-amber-600 dark:text-amber-400 text-sm">
-                스크립트가 없습니다.
-              </div>
-            )}
-          </div>
-
-          {/* RIGHT: PPT Content */}
-          <div className="flex-1 bg-gradient-to-br from-card to-secondary/20 rounded-xl border border-border p-8 flex flex-col min-h-[400px]">
+          {/* LEFT: PPT Content */}
+          <div className="flex-[2] bg-gradient-to-br from-card to-secondary/20 rounded-xl border border-border p-6 flex flex-col min-h-[400px]">
             {/* Slide Header */}
             <div className="flex items-center gap-2 mb-6">
               <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${phaseColors[currentSlide.phase]}`}>
@@ -276,6 +325,23 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
               )}
             </div>
           </div>
+
+          {/* RIGHT: Full Script - 강사가 녹화시 읽는 핵심 화면 */}
+          <div className="flex-[3] bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-8 flex flex-col min-h-[400px] overflow-auto">
+            <div className="flex items-center gap-2 mb-6">
+              <Eye className="w-5 h-5 text-amber-700 dark:text-amber-400" />
+              <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-100">Script</h3>
+            </div>
+            {currentSlide.script ? (
+              <div className="flex-1 text-amber-900 dark:text-amber-100 whitespace-pre-line leading-normal text-xl">
+                {currentSlide.script}
+              </div>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-amber-600 dark:text-amber-400 text-sm">
+                스크립트가 없습니다.
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Fullscreen toggle (right side) */}
@@ -290,72 +356,6 @@ const SlideViewer = ({ slides }: SlideViewerProps) => {
             </button>
           </div>
         )}
-      </div>
-
-      {/* Navigation Controls */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={goToPrevious}
-          disabled={currentIndex === 0}
-          className={`
-            flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium
-            transition-all duration-200
-            ${currentIndex === 0
-              ? "bg-muted text-muted-foreground cursor-not-allowed"
-              : "bg-card text-foreground hover:bg-secondary border border-border shadow-card"
-            }
-          `}
-        >
-          <ChevronLeft className="w-5 h-5" />
-          이전
-        </button>
-
-        {/* Slide indicators */}
-        <div className="flex items-center gap-2">
-          {slides.map((_, index) => {
-            const isActive = currentIndex === index;
-            return (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`
-                  h-2.5 rounded-full transition-all duration-200
-                  ${isActive
-                    ? "bg-primary w-8"
-                    : "bg-border hover:bg-muted-foreground w-2.5"
-                  }
-                `}
-              />
-            );
-          })}
-        </div>
-
-        <div className="flex items-center gap-2">
-          {isFullscreen && (
-            <button
-              onClick={toggleFullscreen}
-              className="p-2.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-              title="전체화면 종료 (F / ESC)"
-            >
-              <Minimize2 className="w-5 h-5" />
-            </button>
-          )}
-          <button
-            onClick={goToNext}
-            disabled={currentIndex >= slides.length - 1}
-            className={`
-              flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium
-              transition-all duration-200
-              ${currentIndex >= slides.length - 1
-                ? "bg-muted text-muted-foreground cursor-not-allowed"
-                : "bg-primary text-primary-foreground hover:opacity-90 shadow-soft"
-              }
-            `}
-          >
-            다음
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
       </div>
 
       {/* Keyboard shortcuts hint (shown in fullscreen) */}
