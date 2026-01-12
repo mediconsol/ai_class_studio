@@ -39,6 +39,77 @@ export const practiceScenarios: PracticeScenario[] = [
 통증 거의 호소 안 함
 혈압 145/85
 보행 안정성 개선됨`
+      },
+      {
+        id: 's08-prac01-d2',
+        title: '5일간 호흡기 환자 기록',
+        description: '폐렴 환자의 5일간 관찰 메모',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'memo',
+        characteristics: '호흡기 관련 지표(산소포화도, 기침, 가래)가 중심인 기록입니다. 산소 요구량 변화가 핵심 추이입니다.',
+        content: `[환자: 이OO (65세, 여)]
+
+[1일차]
+기침 심함
+산소포화도 92%
+산소 2L 적용
+가래 많음
+
+[2일차]
+기침 지속
+산소포화도 91%
+산소 3L로 증량
+발열 37.8도
+
+[3일차]
+기침 약간 감소
+산소포화도 93%
+가래 양 줄어듦
+발열 37.2도
+
+[4일차]
+기침 간헐적
+산소포화도 95%
+산소 2L로 감량
+발열 없음
+
+[5일차]
+기침 거의 없음
+산소포화도 96%
+산소 off 시도
+상태 호전`
+      },
+      {
+        id: 's08-prac01-d3',
+        title: '3일간 수술 후 환자 기록',
+        description: '복부 수술 후 회복 과정 메모',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'memo',
+        characteristics: '수술 후 통증, 배액량, 장운동 회복이 핵심인 기록입니다.',
+        content: `[환자: 박OO (58세, 남)]
+
+[POD#1]
+통증 NRS 7
+JP 배액 150cc
+가스 배출 없음
+NPO 유지
+활력징후 안정
+
+[POD#2]
+통증 NRS 5
+JP 배액 80cc
+가스 배출 확인
+물 시작
+보행 시작
+
+[POD#3]
+통증 NRS 3
+JP 배액 30cc
+장음 청진됨
+미음 시작
+병동 내 보행 가능`
       }
     ],
     prompts: [
@@ -194,6 +265,84 @@ export const practiceScenarios: PracticeScenario[] = [
 혈당 140
 식사량 정상
 퇴원 논의 예정`
+      },
+      {
+        id: 's08-prac02-d2',
+        title: '10일간 심부전 환자 기록',
+        description: '심부전 환자의 장기 관찰 기록',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'memo',
+        characteristics: '체중, 부종, 소변량 등 심부전 관련 지표가 중심인 기록입니다. 이뇨제 반응과 체중 변화가 핵심입니다.',
+        content: `[환자: 박OO (75세, 남)]
+
+[1일차]
+체중 72kg
+하지 부종 3+
+소변량 800cc/일
+호흡곤란 심함
+이뇨제 시작
+
+[3일차]
+체중 70kg
+하지 부종 2+
+소변량 1500cc/일
+호흡곤란 감소
+
+[5일차]
+체중 68kg
+하지 부종 1+
+소변량 1800cc/일
+야간 호흡곤란 없음
+
+[7일차]
+체중 67kg
+부종 거의 없음
+소변량 정상화
+활동 시 호흡 양호
+
+[10일차]
+체중 66kg 유지
+부종 없음
+일상 활동 가능
+퇴원 준비`
+      },
+      {
+        id: 's08-prac02-d3',
+        title: '7일간 뇌졸중 재활 기록',
+        description: '뇌졸중 후 재활 과정 관찰',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'memo',
+        characteristics: '좌측 마비 환자의 기능 회복 과정입니다. 근력, 보행, 일상생활 수행 능력의 변화가 핵심입니다.',
+        content: `[환자: 최OO (68세, 여)]
+
+[1일차]
+좌측 상지 근력 2/5
+좌측 하지 근력 3/5
+침상 안정
+연하 곤란 있음
+L-tube 유지
+
+[3일차]
+좌측 상지 근력 2+/5
+좌측 하지 근력 3+/5
+침상 좌위 가능
+연하 평가 예정
+
+[5일차]
+좌측 상지 근력 3/5
+좌측 하지 근력 4/5
+휠체어 이동 시작
+연하 양호 - L-tube 제거
+죽 식이 시작
+
+[7일차]
+좌측 상지 근력 3+/5
+좌측 하지 근력 4/5
+워커 보행 시작
+일반식 섭취
+PT/OT 진행 중`
       }
     ],
     prompts: [
@@ -362,6 +511,98 @@ export const practiceScenarios: PracticeScenario[] = [
 기침 거의 없음
 산소포화도 97% (room air)
 전반적 호전`
+      },
+      {
+        id: 's08-prac03-d2',
+        title: '수술 후 합병증 회복 패턴',
+        description: '수술 후 감염 발생 후 회복 과정',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'memo',
+        characteristics: '수술 후 3일차에 감염이 발생하여 악화되었다가 항생제 치료 후 호전되는 패턴입니다.',
+        content: `[환자: 김OO (55세, 여)]
+
+[POD#1]
+수술 부위 깨끗함
+체온 36.8도
+통증 NRS 6
+배액량 정상
+
+[POD#2]
+수술 부위 이상 없음
+체온 37.0도
+통증 NRS 5
+보행 시작
+
+[POD#3]
+수술 부위 발적 시작
+체온 38.0도
+오한 호소
+WBC 상승
+항생제 시작
+
+[POD#4]
+발적 지속
+체온 38.5도
+배농 시행함
+통증 증가
+
+[POD#5]
+발적 감소 시작
+체온 37.5도
+배액량 감소
+통증 다소 감소
+
+[POD#7]
+창상 치유 중
+체온 정상
+상태 안정`
+      },
+      {
+        id: 's08-prac03-d3',
+        title: '당뇨 조절 악화-호전 패턴',
+        description: '스트레스로 인한 혈당 악화 후 안정화',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'memo',
+        characteristics: '입원 스트레스로 혈당이 악화되었다가 안정화되는 패턴입니다. 인슐린 용량 조절이 핵심입니다.',
+        content: `[환자: 정OO (62세, 남)]
+
+[1일차]
+혈당 180
+인슐린 10단위
+식욕 저하
+스트레스 호소
+
+[2일차]
+혈당 220
+인슐린 12단위로 증량
+불안 지속
+수면 불량
+
+[3일차]
+혈당 280
+인슐린 15단위로 증량
+두통 호소
+소변량 증가
+
+[4일차]
+혈당 240
+두통 감소
+수면 다소 개선
+심리상담 시행
+
+[5일차]
+혈당 190
+인슐린 12단위로 감량
+불안 감소
+식사량 증가
+
+[6일차]
+혈당 160
+인슐린 10단위 유지
+상태 안정
+퇴원 준비`
       }
     ],
     prompts: [
@@ -524,6 +765,84 @@ export const practiceScenarios: PracticeScenario[] = [
 체온 36.9
 식사량 증가
 활력 회복됨`
+      },
+      {
+        id: 's08-prac04-d2',
+        title: '단위 불일치 기록',
+        description: '측정 단위가 불일치하는 데이터',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'flawed',
+        trapPoints: [
+          '혈당 단위: 1일차 "mg/dL" vs 3일차 단위 없음',
+          '체온 단위: 1일차 "도" vs 2일차 "°C" vs 4일차 단위 없음',
+          '시간 표현: 일관성 없음 (오전/오후 vs 24시간제)'
+        ],
+        characteristics: '여러 담당자가 기록하면서 단위 표기가 일관되지 않은 데이터입니다.',
+        content: `[환자: 한OO (60세, 남)]
+
+[1일차]
+혈당 180 mg/dL (아침)
+체온 37.2도
+혈압 130/80 mmHg
+인슐린 8단위 투여
+
+[2일차]
+혈당 195 (오전 7시)
+체온 37.5°C
+혈압 135/85
+인슐린 증량
+
+[3일차]
+혈당 210
+체온 정상
+혈압 상승
+식전 인슐린 10u
+
+[4일차]
+BS 165 (08:00)
+BT 36.8
+BP 128/78
+RI 8unit`
+      },
+      {
+        id: 's08-prac04-d3',
+        title: '모순된 기록',
+        description: '논리적으로 모순되는 정보가 있는 데이터',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'flawed',
+        trapPoints: [
+          '2일차: "NPO" + "식사량 절반" 동시 기록 (모순)',
+          '3일차: 통증 NRS 8인데 "상태 양호" (불일치)',
+          '4일차: "보행 불가"인데 "화장실 다녀옴" (모순)'
+        ],
+        characteristics: '급하게 작성되어 논리적 모순이 있는 기록입니다.',
+        content: `[환자: 윤OO (70세, 여)]
+
+[1일차]
+수술 전 상태
+NPO 유지
+활력징후 안정
+보호자 상주
+
+[2일차 - POD#0]
+NPO
+식사량 절반
+통증 NRS 6
+의식 명료
+
+[3일차 - POD#1]
+통증 NRS 8
+상태 양호
+보행 못 함
+JP 배액 100cc
+
+[4일차 - POD#2]
+보행 불가
+화장실 다녀옴
+통증 감소
+식이 시작`
       }
     ],
     prompts: [
@@ -714,6 +1033,101 @@ SpO2 97% (room air 유지)
 전반적 호전
 활동량 증가
 퇴원 예정일 논의`
+      },
+      {
+        id: 's08-prac05-d2',
+        title: '소아 환자 관찰 기록',
+        description: '5세 아동의 5일간 관찰 기록',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'role_switch',
+        roleTarget: 'caregiver',
+        characteristics: '소아 환자의 경우 보호자 설명이 특히 중요합니다. 아이의 상태를 부모님이 이해하기 쉽게 설명해야 합니다.',
+        content: `[환자: 민OO (5세, 남)]
+[진단명: 폐렴]
+[입원일: 2024-02-15]
+
+[1일차]
+체온 39.2도
+기침 심함
+식욕 없음
+보채고 울음
+산소포화도 94%
+
+[2일차]
+체온 38.5도
+기침 지속
+수액 유지 중
+간헐적 수면
+엄마 곁에만 있으려 함
+
+[3일차]
+체온 37.8도
+기침 감소
+죽 조금 먹음
+놀이에 관심 보임
+웃음
+
+[4일차]
+체온 정상
+기침 간헐적
+밥 1/2 섭취
+병실 내 활동
+친구(입원 아이) 생김
+
+[5일차]
+상태 양호
+식사 정상
+활발히 놀음
+퇴원 준비`
+      },
+      {
+        id: 's08-prac05-d3',
+        title: '암 환자 관찰 기록',
+        description: '항암치료 중인 환자의 관찰 기록',
+        category: 'nursing',
+        format: 'text',
+        dataType: 'role_switch',
+        roleTarget: 'caregiver',
+        characteristics: '암 환자의 경우 의료진용과 보호자용 설명 수준이 크게 달라야 합니다. 전문 용어 사용에 주의가 필요합니다.',
+        content: `[환자: 송OO (55세, 여)]
+[진단명: 유방암, 항암화학요법 3차]
+[입원일: 2024-02-20]
+
+[D+0 (항암투여일)]
+항암제 투여 완료
+예방적 진토제 투여
+활력징후 안정
+식욕 양호
+
+[D+1]
+오심 시작
+식사량 1/3
+피로감 호소
+구강 건조
+
+[D+2]
+오심 지속, 구토 1회
+식사 거의 못 함
+진토제 추가 투여
+수액 유지
+
+[D+3]
+오심 감소
+죽 섭취 시작
+피로감 여전
+구내염 시작
+
+[D+5]
+오심 거의 없음
+식사량 증가
+구내염 약간
+WBC 확인 예정
+
+[D+7]
+전반적 호전
+퇴원 예정
+외래 예약`
       }
     ],
     prompts: [
@@ -957,6 +1371,135 @@ SpO2 97% (room air 유지)
       "vital_signs": {"BP": "145/85"},
       "nutrition": "",
       "mobility": "보행 안정성 개선"
+    }
+  ]
+}`
+      },
+      {
+        id: 's08-prac06-d2',
+        title: '호흡기 환자 JSON 기록',
+        description: 'JSON 형식의 폐렴 환자 관찰 데이터',
+        category: 'patient',
+        format: 'json',
+        dataType: 'memo',
+        characteristics: '산소포화도, 산소요구량 등 호흡기 관련 수치가 포함된 JSON 데이터입니다.',
+        content: `{
+  "patient_info": {
+    "name": "이OO",
+    "age": "65",
+    "gender": "여",
+    "admission_diagnosis": "폐렴"
+  },
+  "daily_records": [
+    {
+      "day": 1,
+      "date": "2024-02-01",
+      "SpO2": 92,
+      "O2_flow": "2L",
+      "temperature": 38.2,
+      "cough": "심함",
+      "sputum": "황색",
+      "activity": "침상안정"
+    },
+    {
+      "day": 2,
+      "date": "2024-02-02",
+      "SpO2": 91,
+      "O2_flow": "3L",
+      "temperature": 38.5,
+      "cough": "심함",
+      "sputum": "황색, 양 많음",
+      "activity": "침상안정"
+    },
+    {
+      "day": 3,
+      "date": "2024-02-03",
+      "SpO2": 93,
+      "O2_flow": "3L",
+      "temperature": 37.8,
+      "cough": "감소",
+      "sputum": "연황색",
+      "activity": "좌위 가능"
+    },
+    {
+      "day": 4,
+      "date": "2024-02-04",
+      "SpO2": 95,
+      "O2_flow": "2L",
+      "temperature": 37.2,
+      "cough": "간헐적",
+      "sputum": "소량",
+      "activity": "보행 시작"
+    },
+    {
+      "day": 5,
+      "date": "2024-02-05",
+      "SpO2": 97,
+      "O2_flow": "off",
+      "temperature": 36.8,
+      "cough": "거의 없음",
+      "sputum": "없음",
+      "activity": "복도 보행"
+    }
+  ]
+}`
+      },
+      {
+        id: 's08-prac06-d3',
+        title: '수술 후 환자 JSON 기록',
+        description: 'JSON 형식의 수술 후 환자 관찰 데이터',
+        category: 'patient',
+        format: 'json',
+        dataType: 'memo',
+        characteristics: '수술 후 회복 과정(통증, 배액량, 식이, 보행)이 기록된 JSON 데이터입니다.',
+        content: `{
+  "patient_info": {
+    "name": "박OO",
+    "age": "58",
+    "gender": "남",
+    "admission_diagnosis": "담낭염",
+    "operation": "복강경 담낭절제술",
+    "op_date": "2024-02-10"
+  },
+  "daily_records": [
+    {
+      "POD": 0,
+      "date": "2024-02-10",
+      "pain_NRS": 7,
+      "drainage_cc": 100,
+      "diet": "NPO",
+      "ambulation": "침상안정",
+      "vital_stable": true
+    },
+    {
+      "POD": 1,
+      "date": "2024-02-11",
+      "pain_NRS": 5,
+      "drainage_cc": 60,
+      "diet": "물",
+      "ambulation": "침상 좌위",
+      "vital_stable": true,
+      "flatus": false
+    },
+    {
+      "POD": 2,
+      "date": "2024-02-12",
+      "pain_NRS": 4,
+      "drainage_cc": 30,
+      "diet": "미음",
+      "ambulation": "병실 내 보행",
+      "vital_stable": true,
+      "flatus": true
+    },
+    {
+      "POD": 3,
+      "date": "2024-02-13",
+      "pain_NRS": 2,
+      "drainage_cc": 10,
+      "diet": "죽",
+      "ambulation": "복도 보행",
+      "vital_stable": true,
+      "drain_removal": "예정"
     }
   ]
 }`
